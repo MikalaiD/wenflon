@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OnlyInterfacesCommonToAllImplementationsStay {
+public class WenflonTest {
 
     @Test
     void simpleTest() {
@@ -17,7 +17,7 @@ public class OnlyInterfacesCommonToAllImplementationsStay {
         assertThat( wenflon.createProxy().test()).isEqualTo( "ServiceA");
         assertThat( wenflon.createProxy()).isInstanceOf(Testable.class);
     }    @Test
-    void simpleTest2() {
+    void onlyInterfacesCommonToAllImplementationsStay() {
         Wenflon<Testable> wenflon = new Wenflon<>();
         wenflon.add(new ServiceB()); //tmp
         wenflon.add(new ServiceA()); //tmp
