@@ -17,9 +17,8 @@ public class Wenflon <T>  {
         return (T) Proxy.newProxyInstance(
                 Wenflon.class.getClassLoader(),
                 interfaces1,
-                (proxy, method, args) -> {
-                    //temp return sub interfaces here here
-                    return "Testable";
-                });
+                (proxy, method, args) ->
+                    interfaces.get(0).getClass().getSimpleName()
+                );
     }
 }

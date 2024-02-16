@@ -11,6 +11,6 @@ public class SimpleTest {
     void simpleTest() {
         Wenflon<Testable> wenflon = new Wenflon<>();
         wenflon.add(new ServiceA()); //tmp
-        assertThat( wenflon.createProxy().test()).isEqualTo( "Testable");
+        assertThat( wenflon.createProxy().test()).isEqualTo( "ServiceA");
     }
 }
