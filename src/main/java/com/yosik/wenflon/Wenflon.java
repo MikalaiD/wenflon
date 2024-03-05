@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.lang.reflect.*;
 
-public class Wenflon<T> {
+public class Wenflon<T> { //todo rename to vet?
 
     private final List<T> implementations = new ArrayList<>(); //todo not sure if needed concurrent
 
