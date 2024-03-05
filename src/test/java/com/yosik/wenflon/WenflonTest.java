@@ -16,7 +16,8 @@ public class WenflonTest {
         wenflon.add(new ServiceA()); //tmp
         assertThat( wenflon.createProxy().test()).isEqualTo( "ServiceA");
         assertThat( wenflon.createProxy()).isInstanceOf(Testable.class);
-    }    @Test
+    }
+    @Test
     void onlyInterfacesCommonToAllImplementationsStay() {
         Wenflon<Testable> wenflon = new Wenflon<>();
         wenflon.add(new ServiceB()); //tmp
