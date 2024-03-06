@@ -1,4 +1,7 @@
 package com.yosik.wenflon.test_classes;
 
-public class ServiceA implements Testable{
+import com.yosik.wenflon.Wenflon;
+
+@Wenflon
+public class ServiceA implements Testable {
 }

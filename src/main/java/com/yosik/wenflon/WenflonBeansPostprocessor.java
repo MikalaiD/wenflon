@@ -8,8 +8,8 @@ public class WenflonBeansPostprocessor implements BeanPostProcessor {
 
         @Override
         public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-            if (bean.getClass().isAnnotationPresent(Interchangable.class)) {
-                throw new RuntimeException("Tmp - for wenflon!");
+            if (bean.getClass().isAnnotationPresent(Wenflon.class)) {
+                //return wenflon proxy here of the bean
             }
             return bean;
         }
