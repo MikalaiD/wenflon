@@ -10,7 +10,7 @@ public class WenflonRegistry {
     private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
     public void preRegister(final Object bean) {
         Arrays.stream(bean.getClass().getInterfaces())
-                .filter(intf->intf.isAnnotationPresent(Wenflon.class))
+                .filter(in->in.isAnnotationPresent(Wenflon.class))
                 .forEach(this::upsertWenflon);
     }
 
@@ -19,6 +19,6 @@ public class WenflonRegistry {
     }
 
     private void upsertWenflon(final Class<?> aClass) {
-        registry.put(aClass, new WenflonDynamicProxy<>());
+        registry.merge(aClass, new WenflonDynamicProxy<>(), (a,b)-> {b.increment(); return b;});
     }
 }

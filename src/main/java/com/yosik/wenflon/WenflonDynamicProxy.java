@@ -1,11 +1,24 @@
 package com.yosik.wenflon;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.lang.reflect.*;
 
 public class WenflonDynamicProxy<T> { //todo rename to vet?
+
+    @Getter
+    private int latch = 1; //todo tmp, before switch to some dedicated async structure
+
+    public WenflonDynamicProxy() {//todo tmp, before switch to some dedicated async structure
+        this.latch = 1;
+    }
+
+    void increment() { //todo tmp, before switch to some dedicated async structure
+        latch++;
+    }
 
     private final List<T> implementations = new ArrayList<>(); //todo not sure if needed concurrent
 
