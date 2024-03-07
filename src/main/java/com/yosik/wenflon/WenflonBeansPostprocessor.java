@@ -21,7 +21,7 @@ public class WenflonBeansPostprocessor implements BeanPostProcessor {
             if (Arrays.stream(bean.getClass().getInterfaces()).anyMatch(aClass -> aClass.isInstance(WenflonSimpleMarking.class))) {
                 //todo add a counter here, so in post postProcessAfterInitialization we know how many and what kind of bean is there
                 //can be async
-                wenflonRegistry.registerBehindWenflon(bean);
+                wenflonRegistry.registerBehindWenflon(bean); //todo aaaaand return
             }
             return bean;
         }
