@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WenflonRegistry {
 
     private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
-    public void preRegister(final Object bean) {
+    public void registerBehindWenflon(final Object bean) {
         Arrays.stream(bean.getClass().getInterfaces())
                 .filter(in->in.isAnnotationPresent(Wenflon.class))
                 .forEach(this::upsertWenflon);
