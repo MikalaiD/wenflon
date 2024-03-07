@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-public class WenflonDynamicProxySpringTest {
+public class WenflonDynamicProxyFactorySpringTest {
 
 
     @TestConfiguration

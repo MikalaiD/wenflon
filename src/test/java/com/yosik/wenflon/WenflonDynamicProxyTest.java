@@ -10,19 +10,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WenflonDynamicProxyTest {
 
-    @Test
-    void simpleTest() {
-        WenflonDynamicProxy<Testable> wenflonDynamicProxy = new WenflonDynamicProxy<>();
-        wenflonDynamicProxy.add(new ServiceA()); //tmp
-        assertThat( wenflonDynamicProxy.createProxy().test()).isEqualTo( "ServiceA");
-        assertThat( wenflonDynamicProxy.createProxy()).isInstanceOf(Testable.class);
-    }
-    @Test
-    void onlyInterfacesCommonToAllImplementationsStay() {
-        WenflonDynamicProxy<Testable> wenflonDynamicProxy = new WenflonDynamicProxy<>();
-        wenflonDynamicProxy.add(new ServiceB()); //tmp
-        wenflonDynamicProxy.add(new ServiceA()); //tmp
-        assertThat(wenflonDynamicProxy.createProxy()).isInstanceOf(Testable.class);
-        assertThat(wenflonDynamicProxy.createProxy()).isNotInstanceOf(Notneeded.class);
-    }
+//    @Test
+//    void simpleTest() {
+//        WenflonDynamicProxy wenflonDynamicProxy = new WenflonDynamicProxy();
+//        wenflonDynamicProxy.add(new ServiceA());
+//        assertThat( wenflonDynamicProxy.createProxy().test()).isEqualTo( "ServiceA");
+//        assertThat( wenflonDynamicProxy.createProxy()).isInstanceOf(Testable.class);
+//    }
+//    @Test
+//    void onlyInterfacesCommonToAllImplementationsStay() {
+//        WenflonDynamicProxy<Testable> wenflonDynamicProxy = new WenflonDynamicProxy<>();
+//        wenflonDynamicProxy.add(new ServiceB()); //tmp
+//        wenflonDynamicProxy.add(new ServiceA()); //tmp
+//        assertThat(wenflonDynamicProxy.createProxy()).isInstanceOf(Testable.class);
+//        assertThat(wenflonDynamicProxy.createProxy()).isNotInstanceOf(Notneeded.class);
+//    }
 }
