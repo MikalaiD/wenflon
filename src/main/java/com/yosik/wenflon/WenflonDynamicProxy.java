@@ -6,20 +6,20 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WenflonDynamicProxy { //todo rename to vet?
-    private final List<Object> implementations; //todo not sure if needed concurrent
+class WenflonDynamicProxy {
+    private final List<Object> implementations;
     private final Class<?> interfaceUnderWenflon;
 
     @Getter
     private final Object proxy;
 
-    public WenflonDynamicProxy(final Class<?> interfaceUnderWenflon) {
+    WenflonDynamicProxy(final Class<?> interfaceUnderWenflon) {
         this.interfaceUnderWenflon = interfaceUnderWenflon;
-        implementations=new ArrayList<>();
+        implementations = new ArrayList<>();
         proxy = createProxy();
     }
 
-    public WenflonDynamicProxy addImplementation(final Object bean) {
+    WenflonDynamicProxy addImplementation(final Object bean) {
         implementations.add(bean);
         return this;
     }
@@ -27,7 +27,7 @@ public class WenflonDynamicProxy { //todo rename to vet?
     private Object createProxy() {
         return Proxy.newProxyInstance(
                 WenflonDynamicProxy.class.getClassLoader(),
-                new Class<?> [] {interfaceUnderWenflon},
+                new Class<?>[]{interfaceUnderWenflon},
                 (proxy, method, args) -> {
                     System.out.println("Placeholder!!!");
                     return "test";
