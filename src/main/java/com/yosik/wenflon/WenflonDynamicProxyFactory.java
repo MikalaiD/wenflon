@@ -1,38 +1,37 @@
 package com.yosik.wenflon;
 
+import lombok.Getter;
+
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.lang.reflect.*;
 
 public class WenflonDynamicProxyFactory { //todo rename to vet?
     private final List<Object> implementations; //todo not sure if needed concurrent
     private final Class<?> interfaceUnderWenflon;
 
-    public WenflonDynamicProxyFactory(final Class<?> interfaceUnderWenflon, final Object bean) {
+    @Getter
+    private final Object proxy;
+
+    public WenflonDynamicProxyFactory(final Class<?> interfaceUnderWenflon) {
         this.interfaceUnderWenflon = interfaceUnderWenflon;
-        implementations=new ArrayList<>(List.of(bean));
+        implementations=new ArrayList<>();
+        proxy = createProxy();
     }
 
-    public void add(Object bean) {
+    public WenflonDynamicProxyFactory addImplementation(final Object bean) {
         implementations.add(bean);
+        return this;
     }
 
-    public Object createProxy() {
+    private Object createProxy() {
         return Proxy.newProxyInstance(
                 WenflonDynamicProxyFactory.class.getClassLoader(),
                 new Class<?> [] {interfaceUnderWenflon},
-                (proxy, method, args) -> implementations.get(0).getClass().getSimpleName() //todo normal implementation
+                (proxy, method, args) -> {
+                    System.out.println("Placeholder!!!");
+                    return "test";
+                }//todo normal implementation
         );
-    }
-
-    private Class<?>[] getCommonInterfaces() {
-        return implementations.stream()
-                .map(impl -> Arrays.stream(impl.getClass().getInterfaces()).toList())
-                .reduce((a, b) -> {
-                    var newA = new ArrayList<>(a);
-                    newA.retainAll(b);
-                    return newA;
-                }).orElseThrow().toArray(Class<?>[]::new);
     }
 }

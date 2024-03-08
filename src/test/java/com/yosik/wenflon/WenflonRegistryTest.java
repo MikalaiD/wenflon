@@ -18,16 +18,18 @@ class WenflonRegistryTest {
 
     @Test
     void simple_registration() {
-        Object wenflon = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA());
-        Assertions.assertThat(wenflon).isNotNull();
+        Object wenflonProxy = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA());
+        Assertions.assertThat(wenflonProxy).isNotNull();
     }
     @Test
     void registration_of_2_beans_for_same_wenflon() {
-        Object wenflon1 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA());
-        Object wenflon2 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceB());
-        Assertions.assertThat(wenflon1).isNotNull();
-        Assertions.assertThat(wenflon2).isNotNull();
-        Assertions.assertThat(wenflon1).isEqualTo(wenflon2).isInstanceOf(WenflonDynamicProxyFactory.class);
-//        Assertions.assertThat(((WenflonDynamicProxy)wenflon).getLatch()).isEqualTo(2);
+        //when
+        var wenflon1 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA());
+        var wenflon2 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceB());
+
+        //then
+        Assertions.assertThat(wenflon1).isNotNull().isInstanceOf(Testable.class);
+        Assertions.assertThat(wenflon2).isNotNull().isInstanceOf(Testable.class);
+        Assertions.assertThat(wenflon1 == wenflon2).isEqualTo(true);
     }
 }

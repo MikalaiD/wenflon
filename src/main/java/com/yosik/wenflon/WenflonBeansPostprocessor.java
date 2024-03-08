@@ -24,7 +24,7 @@ public class WenflonBeansPostprocessor implements BeanPostProcessor {
             if (interfaceWithWenflon.isPresent()) {
                 //todo add a counter here, so in post postProcessAfterInitialization we know how many and what kind of bean is there
                 //can be async
-               return wenflonRegistry.registerBehindWenflon(interfaceWithWenflon.get(), bean); //todo aaaaand return
+               return wenflonRegistry.registerBehindWenflon(interfaceWithWenflon.get(), bean);
             } //FINISHED here - make it return actual proxy
             return bean;
         }
