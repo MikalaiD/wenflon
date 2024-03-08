@@ -12,12 +12,12 @@ public class WenflonBeansPostprocessor implements BeanPostProcessor {
 
         private final WenflonRegistry wenflonRegistry;
         @Override
-        public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
             return bean;
         }
 
         @Override
-        public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
             //here we assume class will implement only one interface under wenflon
             Optional<Class<?>> interfaceWithWenflon = Arrays.stream(bean.getClass().getInterfaces()).filter(aClass -> aClass.isAnnotationPresent(Wenflon.class)).findFirst();
             if (interfaceWithWenflon.isPresent()) {
