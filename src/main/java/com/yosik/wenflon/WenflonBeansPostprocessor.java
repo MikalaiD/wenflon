@@ -13,8 +13,7 @@ public class WenflonBeansPostprocessor implements BeanPostProcessor {
         private final WenflonRegistry wenflonRegistry;
         @Override
         public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-
-            return bean; //todo what to do with it? deregister? or make proxy primary forcefully
+            return bean;
         }
 
         @Override
