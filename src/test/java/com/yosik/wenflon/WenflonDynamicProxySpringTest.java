@@ -31,7 +31,7 @@ public class WenflonDynamicProxySpringTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+
     }
 
     @Test
