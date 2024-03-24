@@ -19,13 +19,8 @@ public class WenflonDynamicProxySpringTest {
     static class TestConfig {
 
         @Bean
-        WenflonRegistry wenflonRegistry() {
-            return new WenflonRegistry();
-        }
-
-        @Bean
-        WenflonBeansPostprocessor postprocessor(WenflonRegistry wenflonRegistry) {
-            return new WenflonBeansPostprocessor(wenflonRegistry);
+        WenflonBeansPostprocessor postprocessor() {
+            return new WenflonBeansPostprocessor();
         }
 
         @Bean
@@ -41,6 +36,7 @@ public class WenflonDynamicProxySpringTest {
 
     @Test
     void simple_test() {
+
         assert true;
     }
 

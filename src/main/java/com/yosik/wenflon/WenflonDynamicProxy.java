@@ -28,10 +28,7 @@ class WenflonDynamicProxy {
         return Proxy.newProxyInstance(
                 WenflonDynamicProxy.class.getClassLoader(),
                 new Class<?>[]{interfaceUnderWenflon},
-                (proxy, method, args) -> {
-                    System.out.println("Placeholder!!!");
-                    return "test";
-                }//todo normal implementation
+                (proxy, method, args) -> method.invoke(implementations.get(0), args)
         );
     }
 }
