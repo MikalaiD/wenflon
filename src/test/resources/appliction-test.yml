@@ -1,0 +1,11 @@
+non-wenflon-properties:
+  not-cute:
+    - polar bear
+    - grizzly bear
+  cute:
+    - panda
+wenflon:
+  conditions:
+    neuf: true
+
+
