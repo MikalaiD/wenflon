@@ -1,6 +1,5 @@
 package com.yosik.wenflon;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -10,10 +9,10 @@ public class WenflonRegistry {
 
     private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
 
-    public WenflonDynamicProxy<?> registerBehindWenflon(final Class<?> anInterface,
-                                                        final Object bean,
-                                                        final Supplier<String> pivotProvider, //todo generalise from String
-                                                        final Predicate<String> condition) { //todo generalise from String
+    public WenflonDynamicProxy<?> putBehindWenflon(final Class<?> anInterface, //todo maybe return void?
+                                                   final Object bean,
+                                                   final Supplier<String> pivotProvider, //todo generalise from String
+                                                   final Predicate<String> condition) { //todo generalise from String
         if (!registry.containsKey(anInterface)) {
             registry.put(anInterface, new WenflonDynamicProxy<>(anInterface, pivotProvider));
         }
@@ -27,7 +26,7 @@ public class WenflonRegistry {
         return wenflon;
     }
 
-    public boolean isWenflonRegisteredFor(Class<?> aClass) {
+    public boolean isWenflonPreparedFor(Class<?> aClass) {
         return registry.containsKey(aClass);
     }
 }

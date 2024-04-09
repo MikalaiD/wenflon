@@ -34,16 +34,25 @@ public class WenflonBeanPostprocessor
       throws BeansException {
     // here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
-
-    //        Optional.of(bean.getClass())
-    //                .filter(wenflonRegistry::isWenflonRegisteredFor)
-    //                .ifPresent(aClass -> wenflonRegistry.registerBehindWenflon(aClass,
-    //                        bean,
-    //                        () -> "panda", //todo temp, come up with passing pivot provider class
-    // from Wenflon
-    //                        (value) -> true ? value.equals("panda") :
-    // value.equals("grizzly"))//todo temp, come up with passing condition from WenflonList
-    //                );
+    Stream.of(bean)
+        .filter(aBean -> !(aBean instanceof Proxy))
+        .map(Object::getClass)
+        .flatMap(aClass -> Arrays.stream(aClass.getInterfaces()))
+        .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class))
+        .filter(wenflonRegistry::isWenflonPreparedFor)
+        .forEach(
+            aClass ->
+                wenflonRegistry.putBehindWenflon(
+                    aClass,
+                    bean,
+                    () ->
+                        "panda", // todo temp, come up with passing pivot provider classfrom Wenflon
+                    (value) ->
+                        true
+                            ? value.equals("panda")
+                            : value.equals(
+                                "grizzly")) // todo temp, come up with passing condition from WenflonList
+            );
     return bean;
   }
 

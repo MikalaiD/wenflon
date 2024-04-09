@@ -32,7 +32,7 @@ public class WenflonDynamicProxy<T> {
     private T createProxy() {
         return representedInterface.cast(Proxy.newProxyInstance(
                 WenflonDynamicProxy.class.getClassLoader(),
-                new Class<?>[]{representedInterface},
+                new Class<?>[]{representedInterface, com.yosik.wenflon.Proxy.class},
                 (proxy, method, args) -> method.invoke(defineImplementation(), args))
         );
     }

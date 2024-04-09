@@ -22,14 +22,14 @@ class WenflonRegistryTest {
 
     @Test
     void simple_registration() {
-        Object wenflonProxy = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA(), pivotProvider, a->true);
+        Object wenflonProxy = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceA(), pivotProvider, a->true);
         Assertions.assertThat(wenflonProxy).isNotNull();
     }
     @Test
     void registration_of_2_beans_for_same_wenflon() {
         //when
-        var wenflon1 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceA(), pivotProvider, a->true);
-        var wenflon2 = wenflonRegistry.registerBehindWenflon(Testable.class, new ServiceB(), pivotProvider, a->false);
+        var wenflon1 = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceA(), pivotProvider, a->true);
+        var wenflon2 = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceB(), pivotProvider, a->false);
 
         //then
         Assertions.assertThat(wenflon1).isNotNull().isInstanceOf(Testable.class);
