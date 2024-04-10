@@ -45,8 +45,6 @@ public class WenflonBeanPostprocessor
                 wenflonRegistry.putBehindWenflon(
                     aClass,
                     bean,
-                    () ->
-                        "panda", // todo temp, come up with passing pivot provider classfrom Wenflon
                     (value) ->
                         true
                             ? value.equals("panda")

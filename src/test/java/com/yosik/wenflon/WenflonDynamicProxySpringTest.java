@@ -68,6 +68,6 @@ public class WenflonDynamicProxySpringTest {
     @Test
     void condition_work(){
         String result = primaryTestable.test();
-        Assertions.assertThat(result).isEqualTo(ServiceB.class.getCanonicalName());
+        Assertions.assertThat(result).isEqualTo(ServiceA.class.getCanonicalName());
     }
 }

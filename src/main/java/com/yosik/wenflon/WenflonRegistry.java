@@ -11,10 +11,9 @@ public class WenflonRegistry {
 
     public WenflonDynamicProxy<?> putBehindWenflon(final Class<?> anInterface, //todo maybe return void?
                                                    final Object bean,
-                                                   final Supplier<String> pivotProvider, //todo generalise from String
                                                    final Predicate<String> condition) { //todo generalise from String
         if (!registry.containsKey(anInterface)) {
-            registry.put(anInterface, new WenflonDynamicProxy<>(anInterface, pivotProvider));
+            registry.put(anInterface, new WenflonDynamicProxy<>(anInterface, ()->"panda")); //todo temp
         }
         registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, condition)); //todo come up with predicate based on wenflon type
         return registry.get(anInterface);
