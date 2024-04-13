@@ -11,15 +11,17 @@ import java.util.function.Supplier;
 public class WenflonDynamicProxy<T> {
   private final Map<Object, Predicate<String>> implementations;
   @Getter private final Class<T> representedInterface;
-  private final Supplier<String> pivotProvider;
+  private final Supplier<Map<String, Supplier<?>>> pivotProvider;
 
   @Getter private final T proxy;
 
-  WenflonDynamicProxy(final Class<T> representedInterface, final Supplier<String> pivotProvider) {
+  WenflonDynamicProxy(
+      final Class<T> representedInterface,
+      final Supplier<Map<String, Supplier<?>>> pivotProvidersMap) {
     this.representedInterface = representedInterface;
     implementations = new HashMap<>();
     proxy = createProxy();
-    this.pivotProvider = pivotProvider;
+    this.pivotProvider = pivotProvidersMap;
   }
 
   WenflonDynamicProxy<T> addImplementation(final Object bean, final Predicate<String> condition) {
@@ -36,15 +38,24 @@ public class WenflonDynamicProxy<T> {
   }
 
   private Object defineImplementation() {
-    return implementations.keySet().stream()
-        .filter(aClass -> aClass.getClass().getSimpleName().contains("ServiceA"))
-        .findFirst()
-        .get(); // todo temp - delete it after pivot provider is added
-    //        return implementations.entrySet().stream()
-    //                .filter(predicateObjectEntry ->
-    // predicateObjectEntry.getValue().test(pivotProvider.get()))
-    //                .findFirst().map(Map.Entry::getKey).orElse(new Object()); //todo test this
-    // scenario if it is possible
+    final var pivot =
+        pivotProvider
+            .get()
+            .getOrDefault(
+                "defaultPivotProvider",
+                () -> {
+                  throw new RuntimeException("No pivot provider of a given name");
+                })
+            .get();
+    return pivot.equals("panda")
+        ? implementations.keySet().stream()
+            .filter(aClass -> aClass.getClass().getSimpleName().contains("ServiceA")) // todo temp
+            .findFirst()
+            .get()
+        : implementations.keySet().stream()
+            .filter(aClass -> aClass.getClass().getSimpleName().contains("ServiceB"))
+            .findFirst()
+            .get();
   }
 
   public String getName() {

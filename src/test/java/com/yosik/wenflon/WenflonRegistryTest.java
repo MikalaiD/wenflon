@@ -1,7 +1,6 @@
 package com.yosik.wenflon;
 
 import com.yosik.wenflon.test_classes.ServiceA;
-import com.yosik.wenflon.test_classes.ServiceB;
 import com.yosik.wenflon.test_classes.Testable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

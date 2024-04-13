@@ -18,10 +18,12 @@ public class WenflonBeanPostprocessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
+  private final Set<String> pivotProviderBeanNames = new HashSet<>();
 
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
+    extractPivotProviderBeanName(registry);
     findAnnotatedInterfaces(registry)
         .entrySet()
         .forEach(
@@ -29,29 +31,38 @@ public class WenflonBeanPostprocessor
                 registerWenflonDynamicProxyAsPrimaryBean(registry, interfaceAnnotatedWithWenflon));
   }
 
+
   @Override
   public Object postProcessBeforeInitialization(final Object bean, final String beanName)
       throws BeansException {
     // here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
+    if (bean instanceof PivotProvider<?> pivotProvider){
+      wenflonRegistry.addPivotProvider(pivotProvider, beanName);
+    } else {
+      putBehindWendWenflonIfApplicable(bean);
+    }
+    return bean;
+  }
+
+  private void putBehindWendWenflonIfApplicable(Object bean) {
     Stream.of(bean)
         .filter(aBean -> !(aBean instanceof Proxy))
         .map(Object::getClass)
         .flatMap(aClass -> Arrays.stream(aClass.getInterfaces()))
-        .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class))
+        .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class)) //todo maybe this step is not needed? can populate some sturcture in the postProcessBeanDefinitionRegistry step and here just filter
         .filter(wenflonRegistry::isWenflonPreparedFor)
         .forEach(
             aClass ->
                 wenflonRegistry.putBehindWenflon(
                     aClass,
-                    bean,
+                        bean,
                     (value) ->
                         true
                             ? value.equals("panda")
                             : value.equals(
                                 "grizzly")) // todo temp, come up with passing condition from WenflonList
             );
-    return bean;
   }
 
   @Override
@@ -83,6 +94,17 @@ public class WenflonBeanPostprocessor
                 Map.Entry::getValue,
                 stringEntry -> List.of(stringEntry.getKey()),
                 (l1, l2) -> Stream.concat(l1.stream(), l2.stream()).toList()));
+  }
+
+  private void extractPivotProviderBeanName(final BeanDefinitionRegistry registry) {
+    Arrays.stream(registry.getBeanDefinitionNames()) //todo repeated code in findAnnotatedInterfaces
+            .map(name -> toEntry(registry, name))
+            .filter(entry -> PivotProvider.class.isAssignableFrom(entry.getValue()))
+            .map(Map.Entry::getKey)
+            .forEach(pivotProviderBeanNames::add); //todo probably no need to save to the list
+    if (pivotProviderBeanNames.isEmpty()){
+      throw new RuntimeException("At least one bean implementing PivotProvider should be present in context");
+    }
   }
 
   private static Map.Entry<String, ? extends Class<?>> toEntry(
