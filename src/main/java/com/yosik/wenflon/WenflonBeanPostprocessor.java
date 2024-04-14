@@ -19,7 +19,6 @@ public class WenflonBeanPostprocessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
-  private final Set<String> pivotProviderBeanNames = new HashSet<>();
 
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
