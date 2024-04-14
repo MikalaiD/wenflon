@@ -1,9 +1,11 @@
-package com.yosik.wenflon;
+package com.yosik.wenflon.spring_tests;
 
 
-import com.yosik.wenflon.test_classes.ServiceA;
-import com.yosik.wenflon.test_classes.ServiceB;
-import com.yosik.wenflon.test_classes.Testable;
+import com.yosik.wenflon.PivotProvider;
+import com.yosik.wenflon.WenflonBeanPostprocessor;
+import com.yosik.wenflon.spring_tests.test_classes.ServiceA;
+import com.yosik.wenflon.spring_tests.test_classes.ServiceB;
+import com.yosik.wenflon.spring_tests.test_classes.Testable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

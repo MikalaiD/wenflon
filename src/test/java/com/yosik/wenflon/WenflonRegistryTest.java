@@ -1,7 +1,7 @@
 package com.yosik.wenflon;
 
-import com.yosik.wenflon.test_classes.ServiceA;
-import com.yosik.wenflon.test_classes.Testable;
+import com.yosik.wenflon.spring_tests.test_classes.ServiceA;
+import com.yosik.wenflon.spring_tests.test_classes.Testable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +21,7 @@ class WenflonRegistryTest {
 
     @Test
     void simple_registration() {
+        wenflonRegistry.createAndRegisterWenflonProxy(Testable.class);
         Object wenflonProxy = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceA(), a->true);
         Assertions.assertThat(wenflonProxy).isNotNull();
     }
