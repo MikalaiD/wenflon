@@ -25,7 +25,7 @@ public class WenflonBeanPostprocessor
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
     verifyAtLeastOnePivotProviderIsPresent(registry);
-    findAnnotatedInterfaces(registry)
+    findAllWenflonAnnotatedInterfaces(registry)
         .entrySet()
         .forEach(
             interfaceAnnotatedWithWenflon ->
@@ -85,7 +85,7 @@ public class WenflonBeanPostprocessor
     registry.registerBeanDefinition(wenflon.getName(), beanDefinition);
   }
 
-  private Map<Class<?>, List<String>> findAnnotatedInterfaces(
+  private Map<Class<?>, List<String>> findAllWenflonAnnotatedInterfaces(
       final BeanDefinitionRegistry registry) {
     return Arrays.stream(registry.getBeanDefinitionNames())
         .map(name -> toEntry(registry, name))
