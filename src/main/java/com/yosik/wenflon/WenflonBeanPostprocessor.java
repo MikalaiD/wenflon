@@ -6,6 +6,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class WenflonBeanPostprocessor
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
-    extractPivotProviderBeanName(registry);
+    verifyAtLeastOnePivotProviderIsPresent(registry);
     findAnnotatedInterfaces(registry)
         .entrySet()
         .forEach(
@@ -96,22 +97,25 @@ public class WenflonBeanPostprocessor
                 (l1, l2) -> Stream.concat(l1.stream(), l2.stream()).toList()));
   }
 
-  private void extractPivotProviderBeanName(final BeanDefinitionRegistry registry) {
-    Arrays.stream(registry.getBeanDefinitionNames()) //todo repeated code in findAnnotatedInterfaces
-            .map(name -> toEntry(registry, name))
-            .filter(entry -> PivotProvider.class.isAssignableFrom(entry.getValue()))
-            .map(Map.Entry::getKey)
-            .forEach(pivotProviderBeanNames::add); //todo probably no need to save to the list
-    if (pivotProviderBeanNames.isEmpty()){
-      throw new RuntimeException("At least one bean implementing PivotProvider should be present in context");
-    }
+  private void verifyAtLeastOnePivotProviderIsPresent(final BeanDefinitionRegistry registry) {
+    Arrays.stream(registry.getBeanDefinitionNames())
+        .map(name -> getClassByBeanName(registry, name))
+        .filter(PivotProvider.class::isAssignableFrom)
+        .findAny()
+        .orElseThrow(
+            () ->
+                new BeanDefinitionValidationException(
+                    "At least one bean implementing PivotProvider should be present in context"));
   }
 
   private static Map.Entry<String, ? extends Class<?>> toEntry(
       final BeanDefinitionRegistry registry, final String name) {
     return Map.entry(
-        name,
-        Objects.requireNonNull(registry.getBeanDefinition(name).getResolvableType().getRawClass()));
+        name, getClassByBeanName(registry, name));
+  }
+
+  private static Class<?> getClassByBeanName(BeanDefinitionRegistry registry, String name) {
+    return Objects.requireNonNull(registry.getBeanDefinition(name).getResolvableType().getRawClass());
   }
 
   private static boolean isAnnotatedWithWenflon(final Class<?> clazz) {
