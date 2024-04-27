@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-public class HappyPathTest {
+public class ConditionsTest { //todo extract config as in bean creation test
 
     @Autowired
     Testable primaryTestable;
@@ -53,18 +53,6 @@ public class HappyPathTest {
             return ()->"panda";
         }
     }
-
-
-   @Test()
-    void beans_are_created_correctly() {
-        Assertions.assertThat(primaryTestable).isNotNull();
-        Assertions.assertThat(testableA).isNotNull();
-        Assertions.assertThat(testableB).isNotNull();
-        Assertions.assertThat(testableA).isNotEqualTo(testableB);
-        Assertions.assertThat(testableA).isNotEqualTo(primaryTestable);
-        Assertions.assertThat(testableB).isNotEqualTo(primaryTestable);
-    }
-
 
     @Test
     void condition_work(){

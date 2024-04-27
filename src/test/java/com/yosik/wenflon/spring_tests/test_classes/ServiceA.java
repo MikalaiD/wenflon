@@ -1,8 +1,8 @@
 package com.yosik.wenflon.spring_tests.test_classes;
 
-import com.yosik.wenflon.WenflonList;
+import com.yosik.wenflon.WenflonConditions;
 
 
-@WenflonList(conditions = "${non-wenflon-properties.not-cute}")
+@WenflonConditions(conditions = "panda") //todo temp
 public class ServiceA implements Testable {
 }

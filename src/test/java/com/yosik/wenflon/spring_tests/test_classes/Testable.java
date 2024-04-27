@@ -6,5 +6,5 @@ import com.yosik.wenflon.Wenflon;
 public interface Testable {
     default String test(){
         return this.getClass().getCanonicalName();
-    };
+    }
 }
