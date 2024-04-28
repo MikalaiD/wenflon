@@ -47,18 +47,37 @@ public class WenflonDynamicProxy<T> {
                   throw new RuntimeException("No pivot provider of a given name");
                 })
             .get();
-    return pivot.equals("panda")
-        ? implementations.keySet().stream()
-            .filter(aClass -> aClass.getClass().getSimpleName().contains("ServiceA")) // todo temp
-            .findFirst()
-            .get()
-        : implementations.keySet().stream()
-            .filter(aClass -> aClass.getClass().getSimpleName().contains("ServiceB"))
-            .findFirst()
-            .get();
+    return implementations.entrySet().stream()
+        .filter(
+            implementation -> implementation.getValue().test((String) pivot)) // todo ugly temp cast
+        .map(Map.Entry::getKey)
+        .findFirst()
+        .orElseThrow(); // todo come up with a better exception
   }
 
   public String getName() {
     return String.format("wenflon-%s", this.representedInterface.getSimpleName());
+  }
+
+  public String getProxyName() {
+    return String.format("wproxy-%s", this.representedInterface.getSimpleName());
+  }
+
+  void addConditions(final WenflonProperties properties) {
+    implementations.entrySet().stream()
+        .filter(
+            entry ->
+                properties.getConditions().keySet().stream()
+                    .anyMatch(
+                        name -> name.equals(entry.getKey().getClass().getSimpleName()))) //todo ensure these are bean names
+        .forEach(
+            entry ->
+                implementations.put(
+                    entry.getKey(),
+                    s ->
+                        properties
+                            .getConditions()
+                            .get(entry.getKey().getClass().getSimpleName())
+                            .contains(s)));
   }
 }

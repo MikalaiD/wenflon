@@ -13,5 +13,6 @@ public class FinalAssembler {
   @PostConstruct
   private void assemble() {
     System.out.println("Assembling");
+    wenflons.forEach(wenflon->wenflon.addConditions(properties));
   }
 }
