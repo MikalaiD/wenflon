@@ -17,7 +17,7 @@ public class WenflonRegistry {
 
     public <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
         final var wenflon = new WenflonDynamicProxy<>(aClass);
-        registry.put(aClass, wenflon); //todo  temp pivot provider
+        registry.put(aClass, wenflon);
         return wenflon;
     }
 
