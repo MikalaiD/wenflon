@@ -4,10 +4,13 @@ package com.yosik.wenflon.spring_tests.conditions;
 import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
 import com.yosik.wenflon.spring_tests.common.ServiceA;
+import com.yosik.wenflon.spring_tests.common.ServiceB;
 import com.yosik.wenflon.spring_tests.common.Testable;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +18,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 
@@ -25,7 +30,7 @@ import static org.mockito.Mockito.when;
 public class ConditionsTest { 
 
     @Autowired
-    Testable primaryTestable;
+    Testable wenflonProxyBean;
 
     @Autowired
     @Qualifier("testableA")
@@ -36,11 +41,28 @@ public class ConditionsTest {
 
     @MockBean
     PivotProvider<String> pivotProvider;
-    
-    @Test
-    void condition_work(){
-        when(pivotProvider.getPivot()).thenReturn("panda");
-        String result = primaryTestable.test();
-        Assertions.assertThat(result).isEqualTo(ServiceA.class.getCanonicalName());
+
+
+    @ParameterizedTest
+    @MethodSource("getTestConfigurations")
+    void condition_work(Class<?> implementationClass, String pivot){
+        //given
+        when(pivotProvider.getPivot()).thenReturn(pivot);
+
+        //when
+        String result = wenflonProxyBean.test();
+
+        //then
+        Assertions.assertThat(result).isEqualTo(implementationClass.getCanonicalName());
     }
+
+    public static Stream<Arguments> getTestConfigurations() {
+        return Stream.of(
+                Arguments.of(ServiceA.class, "panda"),
+                Arguments.of(ServiceB.class, "grizzly"),
+                Arguments.of(ServiceA.class, "koala"),
+                Arguments.of(ServiceB.class, "white bear")
+        );
+    }
+
 }

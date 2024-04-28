@@ -1,6 +1,7 @@
 package com.yosik.wenflon;
 
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -38,7 +39,8 @@ public class WenflonDynamicProxy<T> {
   private Object defineImplementation() {
     return implementations.entrySet().stream()
         .filter(
-            implementation -> implementation.getValue().test((String) pivotProvider.getPivot())) // todo ugly temp cast
+            implementation ->
+                    implementation.getValue().test((String) pivotProvider.getPivot())) // todo ugly temp cast
         .map(Map.Entry::getKey)
         .findFirst()
         .orElseThrow(); // todo come up with a better exception
@@ -58,7 +60,7 @@ public class WenflonDynamicProxy<T> {
             entry ->
                 properties.getConditions().keySet().stream()
                     .anyMatch(
-                        name -> name.equals(entry.getKey().getClass().getSimpleName()))) //todo ensure these are bean names
+                        name -> name.equals(extractClassName(entry)))) //todo ensure these are bean names, maybe to preserve bean names? here temp uncapitalizing
         .forEach(
             entry ->
                 implementations.put(
@@ -66,8 +68,12 @@ public class WenflonDynamicProxy<T> {
                     s ->
                         properties
                             .getConditions()
-                            .get(entry.getKey().getClass().getSimpleName())
+                            .get(extractClassName(entry))//todo same here
                             .contains(s)));
+  }
+
+  private static String extractClassName(Map.Entry<Object, Predicate<String>> entry) {
+    return StringUtils.uncapitalize(entry.getKey().getClass().getSimpleName());
   }
 
   void addPivotProvider(final List<PivotProvider<?>> pivotProviders) {
