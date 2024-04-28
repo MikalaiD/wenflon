@@ -40,7 +40,7 @@ public class WenflonBeanPostprocessor
       throws BeansException {
     // here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
-  if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
+    if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
       putBehindAppropriateWenflons(bean);
     }
     return bean;
@@ -58,12 +58,7 @@ public class WenflonBeanPostprocessor
         .flatMap(aClass -> Arrays.stream(aClass.getInterfaces()))
         .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class))
         .filter(wenflonRegistry::isWenflonPreparedFor)
-        .forEach(
-            aClass ->
-                wenflonRegistry.putBehindWenflon(
-                    aClass,
-                    bean)
-            );
+        .forEach(aClass -> wenflonRegistry.putBehindWenflon(aClass, bean));
   }
 
   @Override
@@ -83,10 +78,10 @@ public class WenflonBeanPostprocessor
     wProxyBeanDefinition.setPrimary(true);
     wProxyBeanDefinition.setInstanceSupplier(() -> aClass.cast(wenflon.getProxy()));
     registry.registerBeanDefinition(wenflon.getProxyName(), wProxyBeanDefinition);
-    //should also register a wenflon as a bean so it is then injected into final assembler
+    // should also register a wenflon as a bean so it is then injected into final assembler
     GenericBeanDefinition wenflonBeanDefinition = new GenericBeanDefinition();
     wenflonBeanDefinition.setBeanClass(WenflonDynamicProxy.class);
-    wenflonBeanDefinition.setInstanceSupplier(()->wenflon);
+    wenflonBeanDefinition.setInstanceSupplier(() -> wenflon);
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }
 

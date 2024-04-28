@@ -16,8 +16,7 @@ public class WenflonDynamicProxy<T> {
 
   @Getter private final T proxy;
 
-  WenflonDynamicProxy(
-      final Class<T> representedInterface) {
+  WenflonDynamicProxy(final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
     implementations = new HashMap<>();
     proxy = createProxy();
@@ -40,7 +39,9 @@ public class WenflonDynamicProxy<T> {
     return implementations.entrySet().stream()
         .filter(
             implementation ->
-                    implementation.getValue().test((String) pivotProvider.getPivot())) // todo ugly temp cast
+                implementation
+                    .getValue()
+                    .test((String) pivotProvider.getPivot())) // todo ugly temp cast
         .map(Map.Entry::getKey)
         .findFirst()
         .orElseThrow(); // todo come up with a better exception
@@ -60,7 +61,11 @@ public class WenflonDynamicProxy<T> {
             entry ->
                 properties.getConditions().keySet().stream()
                     .anyMatch(
-                        name -> name.equals(extractClassName(entry)))) //todo ensure these are bean names, maybe to preserve bean names? here temp uncapitalizing
+                        name ->
+                            name.equals(
+                                extractClassName(
+                                    entry)))) // todo ensure these are bean names, maybe to preserve
+                                              // bean names? here temp uncapitalizing
         .forEach(
             entry ->
                 implementations.put(
@@ -68,7 +73,7 @@ public class WenflonDynamicProxy<T> {
                     s ->
                         properties
                             .getConditions()
-                            .get(extractClassName(entry))//todo same here
+                            .get(extractClassName(entry)) // todo same here
                             .contains(s)));
   }
 
@@ -77,7 +82,7 @@ public class WenflonDynamicProxy<T> {
   }
 
   void addPivotProvider(final List<PivotProvider<?>> pivotProviders) {
-    //todo only one - first best - is supported now
-    this.pivotProvider=pivotProviders.stream().findFirst().orElseThrow();
+    // todo only one - first best - is supported now
+    this.pivotProvider = pivotProviders.stream().findFirst().orElseThrow();
   }
 }

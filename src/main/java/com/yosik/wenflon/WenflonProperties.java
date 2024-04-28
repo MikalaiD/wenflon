@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@ConfigurationProperties(prefix = "wenflon") //todo try with yaml
+@ConfigurationProperties(prefix = "wenflon") // todo try with yaml
 @Getter
 @Setter
 public class WenflonProperties {
-    private Map<String, List<String>> conditions;
+  private Map<String, List<String>> conditions;
 }
