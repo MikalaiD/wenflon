@@ -3,7 +3,6 @@ package com.yosik.wenflon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class WenflonRegistry {
@@ -12,12 +11,8 @@ public class WenflonRegistry {
     private final Map<String, Supplier<?>> pivotProviders = new HashMap<>();
 
     public WenflonDynamicProxy<?> putBehindWenflon(final Class<?> anInterface, //todo maybe return void?
-                                                   final Object bean,
-                                                   final Predicate<String> condition) { //todo generalise from String
-//        if (!registry.containsKey(anInterface)) {
-//            registry.put(anInterface, new WenflonDynamicProxy<>(anInterface, ()->"panda")); //todo temp
-//        }
-        registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, condition)); //todo come up with predicate based on wenflon type
+                                                   final Object bean) { //todo generalise from String
+        registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, c->true)); //todo temp default condition... just seems better than null
         return registry.get(anInterface);
     }
 

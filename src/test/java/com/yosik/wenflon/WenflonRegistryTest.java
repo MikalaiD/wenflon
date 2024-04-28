@@ -22,7 +22,7 @@ class WenflonRegistryTest {
     @Test
     void simple_registration() {
         wenflonRegistry.createAndRegisterWenflonProxy(Testable.class);
-        Object wenflonProxy = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceA(), a->true);
+        Object wenflonProxy = wenflonRegistry.putBehindWenflon(Testable.class, new ServiceA());
         Assertions.assertThat(wenflonProxy).isNotNull();
     }
 //    @Test

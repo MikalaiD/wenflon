@@ -1,7 +1,6 @@
 package com.yosik.wenflon;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -67,14 +66,8 @@ public class WenflonBeanPostprocessor
             aClass ->
                 wenflonRegistry.putBehindWenflon(
                     aClass,
-                    bean,
-                        extractPredicateFromAnnotation(bean))
+                    bean)
             );
-  }
-
-  private static Predicate<String> extractPredicateFromAnnotation(final Object bean) {
-    final var set = Arrays.stream(bean.getClass().getAnnotation(WenflonConditions.class).conditions()).collect(Collectors.toSet());
-    return set::contains;
   }
 
   @Override
