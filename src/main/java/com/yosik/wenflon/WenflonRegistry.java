@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 public class WenflonRegistry {
 
     private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
-    private final Map<String, Supplier<?>> pivotProviders = new HashMap<>();
 
     public WenflonDynamicProxy<?> putBehindWenflon(final Class<?> anInterface, //todo maybe return void?
                                                    final Object bean) { //todo generalise from String
@@ -17,16 +16,12 @@ public class WenflonRegistry {
     }
 
     public <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
-        final var wenflon = new WenflonDynamicProxy<>(aClass, () -> pivotProviders);
+        final var wenflon = new WenflonDynamicProxy<>(aClass);
         registry.put(aClass, wenflon); //todo  temp pivot provider
         return wenflon;
     }
 
     public boolean isWenflonPreparedFor(Class<?> aClass) {
         return registry.containsKey(aClass);
-    }
-
-    public void addPivotProvider(final PivotProvider<?> bean, final String beanName) {
-        pivotProviders.put(beanName, bean::getPivot);
     }
 }

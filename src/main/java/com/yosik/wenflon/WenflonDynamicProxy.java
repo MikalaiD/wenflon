@@ -4,24 +4,22 @@ import lombok.Getter;
 
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class WenflonDynamicProxy<T> {
   private final Map<Object, Predicate<String>> implementations;
   @Getter private final Class<T> representedInterface;
-  private final Supplier<Map<String, Supplier<?>>> pivotProvider;
+  private PivotProvider<?> pivotProvider;
 
   @Getter private final T proxy;
 
   WenflonDynamicProxy(
-      final Class<T> representedInterface,
-      final Supplier<Map<String, Supplier<?>>> pivotProvidersMap) {
+      final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
     implementations = new HashMap<>();
     proxy = createProxy();
-    this.pivotProvider = pivotProvidersMap;
   }
 
   WenflonDynamicProxy<T> addImplementation(final Object bean, final Predicate<String> condition) {
@@ -38,18 +36,9 @@ public class WenflonDynamicProxy<T> {
   }
 
   private Object defineImplementation() {
-    final var pivot =
-        pivotProvider
-            .get()
-            .getOrDefault(
-                "defaultPivotProvider",
-                () -> {
-                  throw new RuntimeException("No pivot provider of a given name");
-                })
-            .get();
     return implementations.entrySet().stream()
         .filter(
-            implementation -> implementation.getValue().test((String) pivot)) // todo ugly temp cast
+            implementation -> implementation.getValue().test((String) pivotProvider.getPivot())) // todo ugly temp cast
         .map(Map.Entry::getKey)
         .findFirst()
         .orElseThrow(); // todo come up with a better exception
@@ -79,5 +68,10 @@ public class WenflonDynamicProxy<T> {
                             .getConditions()
                             .get(entry.getKey().getClass().getSimpleName())
                             .contains(s)));
+  }
+
+  void addPivotProvider(final List<PivotProvider<?>> pivotProviders) {
+    //todo only one - first best - is supported now
+    this.pivotProvider=pivotProviders.stream().findFirst().orElseThrow();
   }
 }

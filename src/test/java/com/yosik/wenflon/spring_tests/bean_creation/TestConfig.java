@@ -1,6 +1,9 @@
-package com.yosik.wenflon.spring_tests.test_classes;
+package com.yosik.wenflon.spring_tests.bean_creation;
 
 import com.yosik.wenflon.*;
+import com.yosik.wenflon.spring_tests.common.ServiceA;
+import com.yosik.wenflon.spring_tests.common.ServiceB;
+import com.yosik.wenflon.spring_tests.common.Testable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,7 +32,8 @@ public class TestConfig {
     }
 
     @Bean
-    FinalAssembler finalAssembler(List<WenflonDynamicProxy<?>> wenflonDynamicProxies, WenflonProperties properties){
-        return new FinalAssembler(wenflonDynamicProxies, properties);
+    FinalAssembler finalAssembler(List<WenflonDynamicProxy<?>> wenflonDynamicProxies, WenflonProperties properties,
+                                  List<PivotProvider<?>> pivotProviders){
+        return new FinalAssembler(wenflonDynamicProxies, properties, pivotProviders);
     }
 }

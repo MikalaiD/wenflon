@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.test_classes;
+package com.yosik.wenflon.spring_tests.common;
 
 import com.yosik.wenflon.Wenflon;
 

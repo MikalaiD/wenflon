@@ -1,8 +1,7 @@
-package com.yosik.wenflon.spring_tests;
+package com.yosik.wenflon.spring_tests.bean_creation;
 
 import com.yosik.wenflon.*;
-import com.yosik.wenflon.spring_tests.test_classes.TestConfig;
-import com.yosik.wenflon.spring_tests.test_classes.Testable;
+import com.yosik.wenflon.spring_tests.common.Testable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
 @ContextConfiguration(classes = TestConfig.class)
-@TestPropertySource("classpath:application-test.properties")
+@TestPropertySource("classpath:bean_creation/application-test.properties")
 public class BeanCreationTest {
 
   @Autowired Testable primaryTestable;

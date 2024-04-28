@@ -9,7 +9,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 @RequiredArgsConstructor
@@ -23,7 +22,6 @@ public class WenflonBeanPostprocessor
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
-    verifyAtLeastOnePivotProviderIsPresent(registry);
     identifyWenflonAnnotatedInterfaces(registry);
     registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(registry);
   }
@@ -42,9 +40,7 @@ public class WenflonBeanPostprocessor
       throws BeansException {
     // here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
-    if (bean instanceof PivotProvider<?> pivotProvider) {
-      wenflonRegistry.addPivotProvider(pivotProvider, beanName);
-    } else if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
+  if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
       putBehindAppropriateWenflons(bean);
     }
     return bean;
@@ -106,17 +102,6 @@ public class WenflonBeanPostprocessor
                     (l1, l2) ->
                         Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toSet())));
     this.wenflonInterfacesToBeanNames.putAll(wenflonInterfacesToBeanNames);
-  }
-
-  private void verifyAtLeastOnePivotProviderIsPresent(final BeanDefinitionRegistry registry) {
-    Arrays.stream(registry.getBeanDefinitionNames())
-        .map(name -> getClassByBeanName(registry, name))
-        .filter(PivotProvider.class::isAssignableFrom)
-        .findAny()
-        .orElseThrow(
-            () ->
-                new BeanDefinitionValidationException(
-                    "At least one bean implementing PivotProvider should be present in context"));
   }
 
   private static Map.Entry<String, ? extends Class<?>> toEntry(
