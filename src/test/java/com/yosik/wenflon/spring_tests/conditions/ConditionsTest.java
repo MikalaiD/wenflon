@@ -3,9 +3,9 @@ package com.yosik.wenflon.spring_tests.conditions;
 
 import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
-import com.yosik.wenflon.spring_tests.common.ServiceA;
-import com.yosik.wenflon.spring_tests.common.ServiceB;
-import com.yosik.wenflon.spring_tests.common.Testable;
+import com.yosik.wenflon.spring_tests._common.ServiceA;
+import com.yosik.wenflon.spring_tests._common.ServiceB;
+import com.yosik.wenflon.spring_tests._common.Testable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -26,13 +26,44 @@ public class WenflonBeanPostprocessor
     registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(registry);
   }
 
+  private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
+    final var wenflonInterfacesToBeanNames =
+        Arrays.stream(registry.getBeanDefinitionNames())
+            .map(name -> toEntry(registry, name))
+            .filter(entry -> isAnnotatedWithWenflon(entry.getValue()))
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getValue,
+                    stringEntry -> Set.of(stringEntry.getKey()),
+                    (l1, l2) ->
+                        Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toSet())));
+    this.wenflonInterfacesToBeanNames.putAll(wenflonInterfacesToBeanNames);
+  }
+
+  private static boolean isAnnotatedWithWenflon(final Class<?> clazz) {
+    return Optional.ofNullable(clazz)
+        .map(aClass -> aClass.isAnnotationPresent(Wenflon.class))
+        .orElse(false);
+  }
+
   private void registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(
       BeanDefinitionRegistry registry) {
-    this.wenflonInterfacesToBeanNames
-        .entrySet()
+    this.wenflonInterfacesToBeanNames.entrySet().stream()
+        .filter(WenflonBeanPostprocessor::filterAndLogInappropriateObjects)
         .forEach(
             interfaceAnnotatedWithWenflon ->
                 registerWenflonDynamicProxyAsPrimaryBean(registry, interfaceAnnotatedWithWenflon));
+  }
+
+  private static boolean filterAndLogInappropriateObjects(
+      final Map.Entry<Class<?>, Set<String>> classSetEntry) {
+    if (!classSetEntry.getKey().isInterface()) {
+      log.warn(
+          "Dynamic proxy can be created only for interface: {} is not an interface.",
+          classSetEntry.getKey().getCanonicalName());
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -85,33 +116,14 @@ public class WenflonBeanPostprocessor
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }
 
-  private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
-    final var wenflonInterfacesToBeanNames =
-        Arrays.stream(registry.getBeanDefinitionNames())
-            .map(name -> toEntry(registry, name))
-            .filter(entry -> isAnnotatedWithWenflon(entry.getValue()))
-            .collect(
-                Collectors.toMap(
-                    Map.Entry::getValue,
-                    stringEntry -> Set.of(stringEntry.getKey()),
-                    (l1, l2) ->
-                        Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toSet())));
-    this.wenflonInterfacesToBeanNames.putAll(wenflonInterfacesToBeanNames);
-  }
-
   private static Map.Entry<String, ? extends Class<?>> toEntry(
       final BeanDefinitionRegistry registry, final String name) {
     return Map.entry(name, getClassByBeanName(registry, name));
   }
 
-  private static Class<?> getClassByBeanName(BeanDefinitionRegistry registry, String name) {
+  private static Class<?> getClassByBeanName(
+      final BeanDefinitionRegistry registry, final String name) {
     return Objects.requireNonNull(
         registry.getBeanDefinition(name).getResolvableType().getRawClass());
-  }
-
-  private static boolean isAnnotatedWithWenflon(final Class<?> clazz) {
-    return Optional.ofNullable(clazz)
-        .map(aClass -> aClass.isAnnotationPresent(Wenflon.class))
-        .orElse(false);
   }
 }
