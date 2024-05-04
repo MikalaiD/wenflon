@@ -1,14 +1,10 @@
-package com.yosik.wenflon.spring_tests.bean_creation;
+package com.yosik.wenflon.spring_tests.bean_creation_one_implementation;
 
 import com.yosik.wenflon.*;
-import com.yosik.wenflon.spring_tests._common.ServiceA;
-import com.yosik.wenflon.spring_tests._common.ClassAsWenflon;
-import com.yosik.wenflon.spring_tests._common.ServiceB;
-import com.yosik.wenflon.spring_tests._common.Testable;
+import com.yosik.wenflon.spring_tests._common.*;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 public class TestConfig {
@@ -19,12 +15,8 @@ public class TestConfig {
     }
 
     @Bean
-    Testable testableA() {
-        return new ServiceA();
-    }
-    @Bean
-    Testable testableB() {
-        return new ServiceB();
+    Testable testableA(){
+    return new ServiceA();
     }
 
     @Bean
@@ -32,10 +24,6 @@ public class TestConfig {
         return ()->"panda";
     }
 
-    @Bean
-    ClassAsWenflon serviceMarkedAsWenflon(){
-        return new ClassAsWenflon();
-    }
 
     @Bean
     FinalAssembler finalAssembler(List<WenflonDynamicProxy<?>> wenflonDynamicProxies, WenflonProperties properties,

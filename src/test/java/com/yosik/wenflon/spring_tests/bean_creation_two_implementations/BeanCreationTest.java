@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.bean_creation;
+package com.yosik.wenflon.spring_tests.bean_creation_two_implementations;
 
 import com.yosik.wenflon.*;
 import com.yosik.wenflon.spring_tests._common.ClassAsWenflon;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
 @ContextConfiguration(classes = TestConfig.class)
-@TestPropertySource("classpath:bean_creation/application-test.properties")
+@TestPropertySource("classpath:bean_creation_two_implementations/application-test.properties")
 public class BeanCreationTest {
 
   @Autowired Testable primaryTestable;

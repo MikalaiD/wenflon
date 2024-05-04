@@ -7,6 +7,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class WenflonDynamicProxy<T> {
@@ -36,6 +37,9 @@ public class WenflonDynamicProxy<T> {
   }
 
   private Object defineImplementation() {
+    if (implementations.size() == 1) {
+      return implementations.keySet().stream().findFirst().get();
+    }
     return implementations.entrySet().stream()
         .filter(
             implementation ->
@@ -59,13 +63,13 @@ public class WenflonDynamicProxy<T> {
     implementations.entrySet().stream()
         .filter(
             entry ->
-                properties.getConditions().keySet().stream()
-                    .anyMatch(
-                        name ->
-                            name.equals(
-                                extractClassName(
-                                    entry)))) // todo ensure these are bean names, maybe to preserve
-                                              // bean names? here temp uncapitalizing
+                Optional.ofNullable(properties.getConditions())
+                    .map(
+                        conditions ->
+                            conditions.keySet().stream()
+                                .anyMatch(name -> name.equals(extractClassName(entry))))
+                    .orElse(false)) // todo ensure these are bean names, maybe to preserve
+        // bean names? here temp uncapitalizing
         .forEach(
             entry ->
                 implementations.put(

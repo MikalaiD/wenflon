@@ -7,14 +7,8 @@ public class WenflonRegistry {
 
   private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
 
-  public void putBehindWenflon(
-      final Class<?> anInterface, 
-      final Object bean) {
-    registry.computeIfPresent(
-        anInterface,
-        (k, v) ->
-            v.addImplementation(
-                bean, c -> true)); // todo temp default condition... just seems better than null
+  public void putBehindWenflon(final Class<?> anInterface, final Object bean) {
+    registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, c -> false));
     registry.get(anInterface);
   }
 
