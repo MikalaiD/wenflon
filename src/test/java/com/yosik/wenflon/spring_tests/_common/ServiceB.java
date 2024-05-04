@@ -1,4 +1,4 @@
-package com.yosik.wenflon.test_classes;
+package com.yosik.wenflon.spring_tests._common;
 
 public class ServiceB implements Testable, Notneeded{
 
