@@ -26,7 +26,7 @@ public class TestConfig {
 
 
     @Bean
-    FinalAssembler finalAssembler(List<WenflonDynamicProxy<?>> wenflonDynamicProxies, WenflonProperties properties,
+    FinalAssembler finalAssembler(List<ProxyFactory<?>> wenflonDynamicProxies, DynamicProxyProperties properties,
                                   List<PivotProvider<?>> pivotProviders){
         return new FinalAssembler(wenflonDynamicProxies, properties, pivotProviders);
     }

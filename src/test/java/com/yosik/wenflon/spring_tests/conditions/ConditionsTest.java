@@ -2,7 +2,7 @@ package com.yosik.wenflon.spring_tests.conditions;
 
 
 import com.yosik.wenflon.PivotProvider;
-import com.yosik.wenflon.WenflonProperties;
+import com.yosik.wenflon.DynamicProxyProperties;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
 import com.yosik.wenflon.spring_tests._common.Testable;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@EnableConfigurationProperties(WenflonProperties.class)
+@EnableConfigurationProperties(DynamicProxyProperties.class)
 @ContextConfiguration(classes = TestConfig.class)
 @TestPropertySource("classpath:conditions/application-test.properties")
 public class ConditionsTest { 

@@ -11,6 +11,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "wenflon") // todo try with yaml
 @Getter
 @Setter
-public class WenflonProperties {
+public class DynamicProxyProperties {
   private Map<String, List<String>> conditions;
 }

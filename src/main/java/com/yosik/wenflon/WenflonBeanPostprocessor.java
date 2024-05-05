@@ -16,7 +16,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 public class WenflonBeanPostprocessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
-  private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
+  private final ProxyFactoryRegistry proxyFactoryRegistry = new ProxyFactoryRegistry();
   private final Map<Class<?>, Set<String>> wenflonInterfacesToBeanNames = new HashMap<>();
 
   @Override
@@ -88,8 +88,8 @@ public class WenflonBeanPostprocessor
         .map(Object::getClass)
         .flatMap(aClass -> Arrays.stream(aClass.getInterfaces()))
         .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class))
-        .filter(wenflonRegistry::isWenflonPreparedFor)
-        .forEach(aClass -> wenflonRegistry.putBehindWenflon(aClass, bean));
+        .filter(proxyFactoryRegistry::isWenflonPreparedFor)
+        .forEach(aClass -> proxyFactoryRegistry.putBehindWenflon(aClass, bean));
   }
 
   @Override
@@ -102,7 +102,7 @@ public class WenflonBeanPostprocessor
       final BeanDefinitionRegistry registry, final Map.Entry<Class<?>, Set<String>> wenflonCase) {
     final var aClass = wenflonCase.getKey();
     final var userDefinedBeanDefinitionsNames = wenflonCase.getValue().toArray(new String[] {});
-    WenflonDynamicProxy<?> wenflon = wenflonRegistry.createAndRegisterWenflonProxy(aClass);
+    ProxyFactory<?> wenflon = proxyFactoryRegistry.createAndRegisterWenflonProxy(aClass);
     GenericBeanDefinition wProxyBeanDefinition = new GenericBeanDefinition();
     wProxyBeanDefinition.setBeanClass(aClass);
     wProxyBeanDefinition.setDependsOn(userDefinedBeanDefinitionsNames);
@@ -111,7 +111,7 @@ public class WenflonBeanPostprocessor
     registry.registerBeanDefinition(wenflon.getProxyName(), wProxyBeanDefinition);
     // should also register a wenflon as a bean so it is then injected into final assembler
     GenericBeanDefinition wenflonBeanDefinition = new GenericBeanDefinition();
-    wenflonBeanDefinition.setBeanClass(WenflonDynamicProxy.class);
+    wenflonBeanDefinition.setBeanClass(ProxyFactory.class);
     wenflonBeanDefinition.setInstanceSupplier(() -> wenflon);
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }

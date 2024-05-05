@@ -10,20 +10,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class WenflonDynamicProxy<T> {
+public class ProxyFactory<T> {
   private final Map<Object, Predicate<String>> implementations;
   @Getter private final Class<T> representedInterface;
   private PivotProvider<?> pivotProvider;
 
   @Getter private final T proxy;
 
-  WenflonDynamicProxy(final Class<T> representedInterface) {
+  ProxyFactory(final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
     implementations = new HashMap<>();
     proxy = createProxy();
   }
 
-  WenflonDynamicProxy<T> addImplementation(final Object bean, final Predicate<String> condition) {
+  ProxyFactory<T> addImplementation(final Object bean, final Predicate<String> condition) {
     implementations.put(bean, condition);
     return this;
   }
@@ -31,7 +31,7 @@ public class WenflonDynamicProxy<T> {
   private T createProxy() {
     return representedInterface.cast(
         Proxy.newProxyInstance(
-            WenflonDynamicProxy.class.getClassLoader(),
+            ProxyFactory.class.getClassLoader(),
             new Class<?>[] {representedInterface, com.yosik.wenflon.Proxy.class},
             (proxy, method, args) -> method.invoke(defineImplementation(), args)));
   }
@@ -52,14 +52,14 @@ public class WenflonDynamicProxy<T> {
   }
 
   public String getName() {
-    return String.format("wenflon-%s", this.representedInterface.getSimpleName());
+    return String.format("wfactory-%s", this.representedInterface.getSimpleName());
   }
 
   public String getProxyName() {
     return String.format("wproxy-%s", this.representedInterface.getSimpleName());
   }
 
-  void addConditions(final WenflonProperties properties) {
+  void addConditions(final DynamicProxyProperties properties) {
     implementations.entrySet().stream()
         .filter(
             entry ->
