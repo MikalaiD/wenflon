@@ -1,10 +1,10 @@
 package com.yosik.wenflon.spring_tests.conditions;
 
 import com.yosik.wenflon.*;
-import com.yosik.wenflon.spring_tests._common.ServiceA;
-import com.yosik.wenflon.spring_tests._common.ServiceB;
-import com.yosik.wenflon.spring_tests._common.Testable;
+import com.yosik.wenflon.spring_tests._common.*;
+
 import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,8 +21,13 @@ public class TestConfig {
         return new ServiceA();
     }
     @Bean
-    Testable testableB() {
+    ServiceB testableB() {
         return new ServiceB();
+    }
+
+    @Bean
+    TestableV2 testableC() {
+        return new ServiceC();
     }
 
     @Bean

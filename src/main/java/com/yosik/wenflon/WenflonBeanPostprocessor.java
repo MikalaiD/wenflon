@@ -27,7 +27,7 @@ public class WenflonBeanPostprocessor
   }
 
   private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
-    final var wenflonInterfacesToBeanNames =
+    final var names =
         Arrays.stream(registry.getBeanDefinitionNames())
             .map(name -> toEntry(registry, name))
             .filter(entry -> isAnnotatedWithWenflon(entry.getValue()))
@@ -37,13 +37,27 @@ public class WenflonBeanPostprocessor
                     stringEntry -> Set.of(stringEntry.getKey()),
                     (l1, l2) ->
                         Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toSet())));
-    this.wenflonInterfacesToBeanNames.putAll(wenflonInterfacesToBeanNames);
+    this.wenflonInterfacesToBeanNames.putAll(names);
   }
 
   private static boolean isAnnotatedWithWenflon(final Class<?> clazz) {
-    return Optional.ofNullable(clazz)
-        .map(aClass -> aClass.isAnnotationPresent(Wenflon.class))
-        .orElse(false);
+    if (clazz == null || clazz.isPrimitive()) {
+      return false;
+    }
+    if (clazz.isInterface() && clazz.isAnnotationPresent(Wenflon.class)) {
+      return true;
+    }
+    for (Class<?> iface : clazz.getInterfaces()) {
+      if (iface.isAnnotationPresent(Wenflon.class)) {
+        return true;
+      }
+    }
+    for (Class<?> iface : clazz.getInterfaces()) {
+      if (isAnnotatedWithWenflon(iface)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(
@@ -116,7 +130,7 @@ public class WenflonBeanPostprocessor
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }
 
-  private static Map.Entry<String, ? extends Class<?>> toEntry(
+  private static Map.Entry<String, Class<?>> toEntry(
       final BeanDefinitionRegistry registry, final String name) {
     return Map.entry(name, getClassByBeanName(registry, name));
   }
