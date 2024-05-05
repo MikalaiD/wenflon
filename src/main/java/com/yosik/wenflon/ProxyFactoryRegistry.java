@@ -3,17 +3,17 @@ package com.yosik.wenflon;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WenflonRegistry {
+public class ProxyFactoryRegistry {
 
-  private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
+  private final Map<Class<?>, ProxyFactory<?>> registry = new ConcurrentHashMap<>();
 
   public void putBehindWenflon(final Class<?> anInterface, final Object bean) {
     registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, c -> false));
     registry.get(anInterface);
   }
 
-  public <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
-    final var wenflon = new WenflonDynamicProxy<>(aClass);
+  public <T> ProxyFactory<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
+    final var wenflon = new ProxyFactory<>(aClass);
     registry.put(aClass, wenflon);
     return wenflon;
   }

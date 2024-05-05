@@ -2,17 +2,15 @@ package com.yosik.wenflon;
 
 import jakarta.annotation.PostConstruct;
 
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
 @RequiredArgsConstructor
 public class FinalAssembler { // todo make not public?
 
-  private final List<WenflonDynamicProxy<?>> wenflons;
-  private final WenflonProperties properties;
+  private final List<ProxyFactory<?>> wenflons;
+  private final DynamicProxyProperties properties;
   private final List<PivotProvider<?>> pivotProviders;
 
   @PostConstruct

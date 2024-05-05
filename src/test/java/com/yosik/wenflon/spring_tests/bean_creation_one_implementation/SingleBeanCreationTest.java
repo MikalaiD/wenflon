@@ -15,7 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@EnableConfigurationProperties(WenflonProperties.class)
+@EnableConfigurationProperties(DynamicProxyProperties.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class SingleBeanCreationTest {
 
@@ -27,7 +27,8 @@ public class SingleBeanCreationTest {
 
   @Autowired FinalAssembler finalAssembler;
 
-  @Autowired WenflonProperties properties;
+  @Autowired
+  DynamicProxyProperties properties;
 
   @Nested
   @TestPropertySource("classpath:bean_creation_one_implementation/application-test-empty.properties")

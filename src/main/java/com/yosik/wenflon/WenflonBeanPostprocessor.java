@@ -16,7 +16,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 public class WenflonBeanPostprocessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
-  private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
+  private final ProxyFactoryRegistry proxyFactoryRegistry = new ProxyFactoryRegistry();
   private final Map<Class<?>, Set<String>> wenflonInterfacesToBeanNames = new HashMap<>();
 
   @Override
@@ -27,7 +27,7 @@ public class WenflonBeanPostprocessor
   }
 
   private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
-    final var wenflonInterfacesToBeanNames =
+    final var names =
         Arrays.stream(registry.getBeanDefinitionNames())
             .map(name -> toEntry(registry, name))
             .filter(entry -> isAnnotatedWithWenflon(entry.getValue()))
@@ -37,13 +37,27 @@ public class WenflonBeanPostprocessor
                     stringEntry -> Set.of(stringEntry.getKey()),
                     (l1, l2) ->
                         Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toSet())));
-    this.wenflonInterfacesToBeanNames.putAll(wenflonInterfacesToBeanNames);
+    this.wenflonInterfacesToBeanNames.putAll(names);
   }
 
   private static boolean isAnnotatedWithWenflon(final Class<?> clazz) {
-    return Optional.ofNullable(clazz)
-        .map(aClass -> aClass.isAnnotationPresent(Wenflon.class))
-        .orElse(false);
+    if (clazz == null || clazz.isPrimitive()) {
+      return false;
+    }
+    if (clazz.isInterface() && clazz.isAnnotationPresent(Wenflon.class)) {
+      return true;
+    }
+    for (Class<?> iface : clazz.getInterfaces()) {
+      if (iface.isAnnotationPresent(Wenflon.class)) {
+        return true;
+      }
+    }
+    for (Class<?> iface : clazz.getInterfaces()) {
+      if (isAnnotatedWithWenflon(iface)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(
@@ -88,8 +102,8 @@ public class WenflonBeanPostprocessor
         .map(Object::getClass)
         .flatMap(aClass -> Arrays.stream(aClass.getInterfaces()))
         .filter(aClass -> aClass.isAnnotationPresent(Wenflon.class))
-        .filter(wenflonRegistry::isWenflonPreparedFor)
-        .forEach(aClass -> wenflonRegistry.putBehindWenflon(aClass, bean));
+        .filter(proxyFactoryRegistry::isWenflonPreparedFor)
+        .forEach(aClass -> proxyFactoryRegistry.putBehindWenflon(aClass, bean));
   }
 
   @Override
@@ -102,7 +116,7 @@ public class WenflonBeanPostprocessor
       final BeanDefinitionRegistry registry, final Map.Entry<Class<?>, Set<String>> wenflonCase) {
     final var aClass = wenflonCase.getKey();
     final var userDefinedBeanDefinitionsNames = wenflonCase.getValue().toArray(new String[] {});
-    WenflonDynamicProxy<?> wenflon = wenflonRegistry.createAndRegisterWenflonProxy(aClass);
+    ProxyFactory<?> wenflon = proxyFactoryRegistry.createAndRegisterWenflonProxy(aClass);
     GenericBeanDefinition wProxyBeanDefinition = new GenericBeanDefinition();
     wProxyBeanDefinition.setBeanClass(aClass);
     wProxyBeanDefinition.setDependsOn(userDefinedBeanDefinitionsNames);
@@ -111,12 +125,12 @@ public class WenflonBeanPostprocessor
     registry.registerBeanDefinition(wenflon.getProxyName(), wProxyBeanDefinition);
     // should also register a wenflon as a bean so it is then injected into final assembler
     GenericBeanDefinition wenflonBeanDefinition = new GenericBeanDefinition();
-    wenflonBeanDefinition.setBeanClass(WenflonDynamicProxy.class);
+    wenflonBeanDefinition.setBeanClass(ProxyFactory.class);
     wenflonBeanDefinition.setInstanceSupplier(() -> wenflon);
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }
 
-  private static Map.Entry<String, ? extends Class<?>> toEntry(
+  private static Map.Entry<String, Class<?>> toEntry(
       final BeanDefinitionRegistry registry, final String name) {
     return Map.entry(name, getClassByBeanName(registry, name));
   }
