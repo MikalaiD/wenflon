@@ -1,6 +1,5 @@
 package com.yosik.wenflon.spring_tests.conditions;
 
-
 import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
@@ -27,42 +26,38 @@ import static org.mockito.Mockito.when;
 @EnableConfigurationProperties(WenflonProperties.class)
 @ContextConfiguration(classes = TestConfig.class)
 @TestPropertySource("classpath:conditions/application-test.properties")
-public class ConditionsTest { 
+public class ConditionsTest {
 
-    @Autowired
-    Testable wenflonProxyBean;
+  @Autowired Testable wenflonProxyBean;
 
-    @Autowired
-    @Qualifier("testableA")
-    Testable testableA;
-    @Autowired
-    @Qualifier("testableB")
-    Testable testableB;
+  @Autowired
+  @Qualifier("testableA")
+  Testable testableA;
 
-    @MockBean
-    PivotProvider<String> pivotProvider;
+  @Autowired
+  @Qualifier("testableB")
+  Testable testableB;
 
+  @MockBean PivotProvider<String> pivotProvider;
 
-    @ParameterizedTest
-    @MethodSource("getTestConfigurations")
-    void condition_work(Class<?> implementationClass, String pivot){
-        //given
-        when(pivotProvider.getPivot()).thenReturn(pivot);
+  @ParameterizedTest
+  @MethodSource("getTestConfigurations")
+  void condition_work(Class<?> implementationClass, String pivot) {
+    // given
+    when(pivotProvider.getPivot()).thenReturn(pivot);
 
-        //when
-        String result = wenflonProxyBean.test();
+    // when
+    String result = wenflonProxyBean.test();
 
-        //then
-        Assertions.assertThat(result).isEqualTo(implementationClass.getCanonicalName());
-    }
+    // then
+    Assertions.assertThat(result).isEqualTo(implementationClass.getCanonicalName());
+  }
 
-    public static Stream<Arguments> getTestConfigurations() {
-        return Stream.of(
-                Arguments.of(ServiceA.class, "panda"),
-                Arguments.of(ServiceB.class, "grizzly"),
-                Arguments.of(ServiceA.class, "koala"),
-                Arguments.of(ServiceB.class, "white bear")
-        );
-    }
-
+  public static Stream<Arguments> getTestConfigurations() {
+    return Stream.of(
+        Arguments.of(ServiceA.class, "panda"),
+        Arguments.of(ServiceB.class, "grizzly"),
+        Arguments.of(ServiceA.class, "koala"),
+        Arguments.of(ServiceB.class, "white bear"));
+  }
 }

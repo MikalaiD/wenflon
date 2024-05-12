@@ -1,5 +1,7 @@
 package com.yosik.wenflon;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
@@ -11,20 +13,22 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class WenflonDynamicProxy<T> {
-  private final Map<Object, Predicate<String>> implementations;
+  private final Map<Implementation, Predicate<String>> implementationCases;
   @Getter private final Class<T> representedInterface;
   private PivotProvider<?> pivotProvider;
 
-  @Getter private final T proxy;
+  @Getter private final T wenflonProxy;
 
   WenflonDynamicProxy(final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
-    implementations = new HashMap<>();
-    proxy = createProxy();
+    implementationCases = new HashMap<>();
+    wenflonProxy = createProxy();
   }
 
-  WenflonDynamicProxy<T> addImplementation(final Object bean, final Predicate<String> condition) {
-    implementations.put(bean, condition);
+  WenflonDynamicProxy<T> addImplementation(
+      final Object bean, final String beanName, final Predicate<String> condition) {
+    final var implementation = new Implementation(bean, beanName);
+    implementationCases.put(implementation, condition);
     return this;
   }
 
@@ -37,16 +41,17 @@ public class WenflonDynamicProxy<T> {
   }
 
   private Object defineImplementation() {
-    if (implementations.size() == 1) {
-      return implementations.keySet().stream().findFirst().get();
+    if (implementationCases.size() == 1) {
+      return implementationCases.keySet().stream().map(Implementation::getBean).findFirst().get();
     }
-    return implementations.entrySet().stream()
+    return implementationCases.entrySet().stream()
         .filter(
             implementation ->
                 implementation
                     .getValue()
                     .test((String) pivotProvider.getPivot())) // todo ugly temp cast
         .map(Map.Entry::getKey)
+        .map(Implementation::getBean)
         .findFirst()
         .orElseThrow(); // todo come up with a better exception
   }
@@ -60,33 +65,36 @@ public class WenflonDynamicProxy<T> {
   }
 
   void addConditions(final WenflonProperties properties) {
-    implementations.entrySet().stream()
+    implementationCases.entrySet().stream()
         .filter(
             entry ->
                 Optional.ofNullable(properties.getConditions())
                     .map(
                         conditions ->
                             conditions.keySet().stream()
-                                .anyMatch(name -> name.equals(extractClassName(entry))))
-                    .orElse(false)) // todo ensure these are bean names, maybe to preserve
-        // bean names? here temp uncapitalizing
+                                .anyMatch(name -> name.equals(entry.getKey().getBeanName())))
+                    .orElse(false))
         .forEach(
             entry ->
-                implementations.put(
+                implementationCases.put(
                     entry.getKey(),
                     s ->
                         properties
                             .getConditions()
-                            .get(extractClassName(entry)) // todo same here
+                            .get(entry.getKey().getBeanName())
                             .contains(s)));
-  }
-
-  private static String extractClassName(Map.Entry<Object, Predicate<String>> entry) {
-    return StringUtils.uncapitalize(entry.getKey().getClass().getSimpleName());
   }
 
   void addPivotProvider(final List<PivotProvider<?>> pivotProviders) {
     // todo only one - first best - is supported now
     this.pivotProvider = pivotProviders.stream().findFirst().orElseThrow();
+  }
+
+  @AllArgsConstructor
+  @EqualsAndHashCode(of = "bean")
+  @Getter
+  private static class Implementation {
+    private final Object bean;
+    private final String beanName;
   }
 }
