@@ -5,10 +5,12 @@ import jakarta.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class FinalAssembler { // todo make not public?
 
   private final List<WenflonDynamicProxy<?>> wenflons;
@@ -18,7 +20,7 @@ public class FinalAssembler { // todo make not public?
   @PostConstruct
   private void assemble() {
     validate();
-    System.out.println("Assembling");
+    System.out.println("Assembling"); //todo add appropriate logging
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
     wenflons.forEach(wenflon -> wenflon.addPivotProvider(pivotProviders));
   }
