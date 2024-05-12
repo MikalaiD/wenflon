@@ -1,10 +1,12 @@
 package com.yosik.wenflon.spring_tests.conditions;
 
+import com.yosik.wenflon.FinalAssemblerConfig;
 import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
 import com.yosik.wenflon.spring_tests._common.Testable;
+import com.yosik.wenflon.spring_tests.bean_creation_two_implementations.TestConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, FinalAssemblerConfig.class})
 @TestPropertySource("classpath:conditions/application-test.properties")
 public class ConditionsTest {
 

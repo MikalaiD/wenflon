@@ -1,17 +1,16 @@
 package com.yosik.wenflon;
 
 import jakarta.annotation.PostConstruct;
-
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Slf4j
-public class FinalAssembler { // todo make not public?
+@Component
+class FinalAssembler {
 
   private final List<WenflonDynamicProxy<?>> wenflons;
   private final WenflonProperties properties;
@@ -19,8 +18,8 @@ public class FinalAssembler { // todo make not public?
 
   @PostConstruct
   private void assemble() {
+    log.info("Starting assembling - adding conditions and pivot providers");
     validate();
-    System.out.println("Assembling"); //todo add appropriate logging
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
     wenflons.forEach(wenflon -> wenflon.addPivotProvider(pivotProviders));
     //todo add post validation - throw an exception in case there is something wrong with conditions - e.g. if for a given wenflon

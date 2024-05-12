@@ -16,16 +16,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, FinalAssemblerConfig.class})
 public class SingleBeanCreationTest {
 
   @Autowired Testable primaryTestable;
   @Autowired
   @Qualifier("testableA")
   Testable testableA;
-
-
-  @Autowired FinalAssembler finalAssembler;
 
   @Autowired WenflonProperties properties;
 
@@ -41,7 +38,6 @@ public class SingleBeanCreationTest {
       Assertions.assertThat(testableA).isNotInstanceOf(Proxy.class);
       Assertions.assertThat(testableA).isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNull();
-      Assertions.assertThat(finalAssembler).isNotNull();
     }
 
     @Test
@@ -62,7 +58,6 @@ public class SingleBeanCreationTest {
       Assertions.assertThat(testableA).isNotInstanceOf(Proxy.class);
       Assertions.assertThat(testableA).isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNull();
-      Assertions.assertThat(finalAssembler).isNotNull();
     }
 
     @Test

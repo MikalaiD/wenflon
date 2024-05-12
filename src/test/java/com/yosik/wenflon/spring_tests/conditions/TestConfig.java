@@ -4,14 +4,13 @@ import com.yosik.wenflon.*;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
 import com.yosik.wenflon.spring_tests._common.Testable;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestConfig {
 
-    @Bean
+    @Bean //todo remove since it is configuration?
     WenflonBeanPostprocessor factoryPostprocessor() {
         return new WenflonBeanPostprocessor();
     }
@@ -23,11 +22,5 @@ public class TestConfig {
     @Bean
     Testable testableB() {
         return new ServiceB();
-    }
-
-    @Bean
-    FinalAssembler finalAssembler(List<WenflonDynamicProxy<?>> wenflonDynamicProxies, WenflonProperties properties,
-                                  List<PivotProvider<?>> pivotProviders){
-        return new FinalAssembler(wenflonDynamicProxies, properties, pivotProviders);
     }
 }

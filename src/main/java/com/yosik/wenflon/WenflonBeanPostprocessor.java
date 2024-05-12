@@ -10,11 +10,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Slf4j
-@Configuration
 public class WenflonBeanPostprocessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
