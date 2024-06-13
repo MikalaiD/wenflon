@@ -14,7 +14,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullApi;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -64,8 +63,8 @@ public class WenflonBeanPostprocessor
   }
 
   @Override
-  public Object postProcessBeforeInitialization(@NonNull final Object bean, @NonNull final String beanName)
-      throws BeansException {
+  public Object postProcessBeforeInitialization(
+      @NonNull final Object bean, @NonNull final String beanName) throws BeansException {
     // here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
     if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
@@ -90,8 +89,8 @@ public class WenflonBeanPostprocessor
   }
 
   @Override
-  public Object postProcessAfterInitialization(@NonNull final Object bean, @NonNull final String beanName)
-      throws BeansException {
+  public Object postProcessAfterInitialization(
+      @NonNull final Object bean, @NonNull final String beanName) throws BeansException {
     return bean;
   }
 
@@ -115,33 +114,39 @@ public class WenflonBeanPostprocessor
 
   private static List<Map.Entry<String, Class<?>>> toEntries(
       final BeanDefinitionRegistry registry, final String name) {
-    final Class<?> beanClass = getClassByBeanName(registry, name);
-    return extractWenflonInterfaces(beanClass).stream()
-        .<Map.Entry<String, Class<?>>>map(
-            wenflonAnnotatedInterface -> Map.entry(name, wenflonAnnotatedInterface))
-        .toList();
+    final var beanClassOptional = getClassByBeanName(registry, name);
+    return beanClassOptional
+        .map(
+            aClass ->
+                extractWenflonInterfaces(aClass).stream()
+                    .<Map.Entry<String, Class<?>>>map(
+                        wenflonAnnotatedInterface -> Map.entry(name, wenflonAnnotatedInterface))
+                    .toList())
+        .orElseGet(List::of);
   }
 
   @SneakyThrows
-  private static Class<?>
-      getClassByBeanName( // FINISHED here - this is a new method but proxy stopped producing itself
+  private static Optional<Class<?>> getClassByBeanName(
       final BeanDefinitionRegistry registry, final String name) {
     final var beanDefinition = registry.getBeanDefinition(name);
     if (Objects.isNull(beanDefinition)) {
       throw new RuntimeException("Not known case"); // todo come up with better exception
     }
     if (beanDefinition.getBeanClassName() != null) {
-      return Class.forName(beanDefinition.getBeanClassName());
-    } else if (beanDefinition.getSource() instanceof StandardMethodMetadata) {
-      return Class.forName(
-          ((StandardMethodMetadata) beanDefinition.getSource())
-              .getIntrospectedMethod()
-              .getReturnType()
-              .getName());
-    } else if (beanDefinition.getSource() instanceof Class<?>) {
-      return Class.forName(((Class<?>) beanDefinition.getSource()).getName());
+      return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
     }
-    throw new RuntimeException("Not known case"); // todo come up with better exception
+    if (beanDefinition.getSource() instanceof StandardMethodMetadata) {
+      return Optional.of(
+          Class.forName(
+              ((StandardMethodMetadata) beanDefinition.getSource())
+                  .getIntrospectedMethod()
+                  .getReturnType()
+                  .getName()));
+    }
+    if (beanDefinition.getSource() instanceof Class<?>) {
+      return Optional.of(Class.forName(((Class<?>) beanDefinition.getSource()).getName()));
+    }
+    return Optional.empty();
   }
 
   private static Collection<Class<?>> extractWenflonInterfaces(final Class<?> beanClass) {
@@ -174,9 +179,8 @@ public class WenflonBeanPostprocessor
       return;
     }
     for (Class<?> interfaceClass :
-        clazz
-            .getInterfaces()) { // todo not sure if this part is needed, maybe sometime bean class
-                                // won't be resolved as interface but as concrete class impl??
+        clazz.getInterfaces()) { // todo not sure if this part is needed, maybe sometime bean class
+      // won't be resolved as interface but as concrete class impl??
       if (interfaceClass.isAnnotationPresent(annotation)) {
         bucket.add(interfaceClass);
       }
