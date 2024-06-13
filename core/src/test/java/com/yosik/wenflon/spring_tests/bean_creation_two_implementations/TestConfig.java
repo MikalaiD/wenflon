@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class TestConfig {
 
     @Bean
-    WenflonBeanPostprocessor factoryPostprocessor() {
+    static WenflonBeanPostprocessor factoryPostprocessor() {
         return new WenflonBeanPostprocessor();
     }
 

@@ -1,16 +1,14 @@
 package com.yosik.wenflon;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import org.springframework.util.StringUtils;
-
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 public class WenflonDynamicProxy<T> {
   private final Map<Implementation, Predicate<String>> implementationCases;

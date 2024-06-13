@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class TestConfig {
 
     @Bean //todo remove since it is configuration?
-    WenflonBeanPostprocessor factoryPostprocessor() {
+    static WenflonBeanPostprocessor factoryPostprocessor() {
         return new WenflonBeanPostprocessor();
     }
 

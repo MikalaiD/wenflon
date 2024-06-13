@@ -7,8 +7,10 @@ public class WenflonRegistry {
 
   private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
 
-  public void putBehindWenflon(final Class<?> anInterface, final Object bean, final String beanName) {
-    registry.computeIfPresent(anInterface, (k, v) -> v.addImplementation(bean, beanName, c -> false));
+  public void putBehindWenflon(
+      final Class<?> anInterface, final Object bean, final String beanName) {
+    registry.computeIfPresent(
+        anInterface, (k, v) -> v.addImplementation(bean, beanName, c -> false));
   }
 
   public <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
