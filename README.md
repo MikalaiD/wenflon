@@ -10,6 +10,14 @@ Usually it results in code a-la ```codition ? adapterA : adapterB``` - every tim
 What I wanted is to annotate a frequently updated port once with a special annotation and force Spring to discover all 
 implementation and then use different implementation depending on conditions set via application properties.
 
+## Basic example
+A simple webapp is created with the following features:
+- there is one endpoint
+- there is basic auth and 2 users created
+- each user has custom fields like to which market or to which feature rollout group user belongs
+Call the endpoint
+``` curl -u user1:password1 http://localhost:8080/enter-the-bar ```
+
 ### Behaviour if single implementation is found
 
 #### default behaviour 

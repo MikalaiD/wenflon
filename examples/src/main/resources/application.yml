@@ -1,0 +1,10 @@
+logging:
+  level:
+   org:
+    springframework:
+     security: DEBUG
+
+wenflon:
+  conditions:
+    friendlyBarman: EU, REPUBLIC_OF_KOREA
+    veryFriendlyBarman: US

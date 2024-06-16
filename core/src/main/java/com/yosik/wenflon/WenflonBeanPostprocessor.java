@@ -17,7 +17,7 @@ import org.springframework.lang.NonNull;
 
 @RequiredArgsConstructor
 @Slf4j
-public class WenflonBeanPostprocessor
+public class WenflonBeanPostprocessor //todo maybe to hide and mark as @Component so client service has to declare only pivot provider
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
