@@ -6,5 +6,5 @@ logging:
 
 wenflon:
   conditions:
-    friendlyBarman: EU, REPUBLIC_OF_KOREA
-    veryFriendlyBarman: US
+    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
+    newInsuranceRiskEngine: US
