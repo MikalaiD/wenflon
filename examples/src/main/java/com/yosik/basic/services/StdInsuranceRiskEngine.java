@@ -1,5 +1,6 @@
-package com.yosik.basic;
+package com.yosik.basic.services;
 
+import com.yosik.basic.ports.DecisionEngine;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,6 @@ public class StdInsuranceRiskEngine implements DecisionEngine {
     @Override
     public String rank() {
         Thread.sleep(2000);
-        return "We've taken into account 42 parameters and your risk grade is " + random.nextInt(10);
+        return "The engine has taken into account 42 parameters and your risk grade is " + random.nextInt(10);
     }
 }

@@ -1,4 +1,4 @@
-package com.yosik.basic;
+package com.yosik.basic.config.user;
 
 public enum FeaturesRolloutGroup {
     PUBLIC_TESTER,
