@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "wenflon") // todo try with yaml
+@ConfigurationProperties(prefix = "wenflon")
 @Getter
 @Setter
 public class WenflonProperties {

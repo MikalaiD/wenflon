@@ -69,8 +69,12 @@ wenflon:
 ```
 
 Run the app and call the endpoint with different users to see results 
-- ```curl -u euUser:password1 http://localhost:8080/rank```
-- ```curl -u usUser:password2 http://localhost:8080/rank```
+```shell
+curl -u euUser:password1 http://localhost:8080/rank
+```
+```shell
+curl -u usUser:password2 http://localhost:8080/rank
+```
 
 ### Behaviour if single implementation is found
 
