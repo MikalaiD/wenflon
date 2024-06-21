@@ -14,10 +14,12 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Slf4j
-public class WenflonBeanPostprocessor //todo maybe to hide and mark as @Component so client service has to declare only pivot provider
+@Component
+public class WenflonBeanPostProcessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
@@ -45,7 +47,7 @@ public class WenflonBeanPostprocessor //todo maybe to hide and mark as @Componen
   private void registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(
       BeanDefinitionRegistry registry) {
     this.wenflonInterfacesToBeanNames.entrySet().stream()
-        .filter(WenflonBeanPostprocessor::filterAndLogInappropriateObjects)
+        .filter(WenflonBeanPostProcessor::filterAndLogInappropriateObjects)
         .forEach(
             interfaceAnnotatedWithWenflon ->
                 registerWenflonDynamicProxyAsPrimaryBean(registry, interfaceAnnotatedWithWenflon));
@@ -129,13 +131,10 @@ public class WenflonBeanPostprocessor //todo maybe to hide and mark as @Componen
   private static Optional<Class<?>> getClassByBeanName(
       final BeanDefinitionRegistry registry, final String name) {
     final var beanDefinition = registry.getBeanDefinition(name);
-    if (Objects.isNull(beanDefinition)) {
-      throw new RuntimeException("Not known case"); // todo come up with better exception
-    }
     if (beanDefinition.getBeanClassName() != null) {
       return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
     }
-    if (beanDefinition.getSource() instanceof StandardMethodMetadata) {
+    if (beanDefinition.getSource() instanceof StandardMethodMetadata) { //todo refactor
       return Optional.of(
           Class.forName(
               ((StandardMethodMetadata) beanDefinition.getSource())
