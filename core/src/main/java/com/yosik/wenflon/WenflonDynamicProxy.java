@@ -111,7 +111,7 @@ public class WenflonDynamicProxy<T> {
   @AllArgsConstructor
   @EqualsAndHashCode(of = "bean")
   @Getter
-  private static class Implementation { // todo #15 convert to record
+  private static class Implementation {
     private final Object bean;
     private final String beanName;
   }
