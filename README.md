@@ -76,11 +76,28 @@ curl -u euUser:password1 http://localhost:8080/rank
 curl -u usUser:password2 http://localhost:8080/rank
 ```
 
-### Behaviour if single implementation is found
+### Default implementation 
+Conditions recognize ```default``` keyword which can be used together with other conditions. The ```default```
+will instruct wenflon to use marked implementation in case pivot value is not 
+found in any of given conditions. 
 
-#### default behaviour 
-//todo #15
+In the adjusted example below properties would mean that for any user not from US market 
+the _stdInsuranceRiskEngine_ will be used.
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: default
+    newInsuranceRiskEngine: US
+```
+For more readability, ```default``` can be used with other conditions. The example below will produce the same result 
+as the one above:
 
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, default
+    newInsuranceRiskEngine: US
+```
 #### strict behaviour TODO
 If property ```wenflon.strict``` is set to true (default is false) then
 proxy will require presence of an appropriate condition. In case pivot value provided by pivot provider does not
