@@ -5,15 +5,14 @@ import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
+import com.yosik.wenflon.spring_tests._common.ServiceC;
 import com.yosik.wenflon.spring_tests._common.Testable;
-import com.yosik.wenflon.spring_tests.bean_creation_two_implementations.TestConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,14 +30,6 @@ import static org.mockito.Mockito.when;
 public class ConditionsTest {
 
   @Autowired Testable wenflonProxyBean;
-
-  @Autowired
-  @Qualifier("testableA")
-  Testable testableA;
-
-  @Autowired
-  @Qualifier("testableB")
-  Testable testableB;
 
   @MockBean PivotProvider<String> pivotProvider;
 
@@ -60,6 +51,7 @@ public class ConditionsTest {
         Arguments.of(ServiceA.class, "panda"),
         Arguments.of(ServiceB.class, "grizzly"),
         Arguments.of(ServiceA.class, "koala"),
-        Arguments.of(ServiceB.class, "white bear"));
+        Arguments.of(ServiceB.class, "white bear"),
+        Arguments.of(ServiceC.class, "value out of the list"));
   }
 }

@@ -10,7 +10,7 @@ public class WenflonRegistry {
   public void putBehindWenflon(
       final Class<?> anInterface, final Object bean, final String beanName) {
     registry.computeIfPresent(
-        anInterface, (k, v) -> v.addImplementation(bean, beanName, c -> false));
+        anInterface, (k, v) -> v.addImplementation(bean, beanName));
   }
 
   public <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {

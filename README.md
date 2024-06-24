@@ -79,9 +79,7 @@ curl -u usUser:password2 http://localhost:8080/rank
 ### Behaviour if single implementation is found
 
 #### default behaviour 
-If there is only one bean of the implemented interface then pivot provider
-and conditions from properties are ignored 
-and proxy passes all the calls directly to the bean.
+//todo #15
 
 #### strict behaviour TODO
 If property ```wenflon.strict``` is set to true (default is false) then

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class FinalAssemblerConfig {
+public class FinalAssemblerConfig {//todo#15 - get rid of and just annotated as component?
   @Bean
   FinalAssembler finalAssembler(
       final List<WenflonDynamicProxy<?>> wenflonDynamicProxies,
