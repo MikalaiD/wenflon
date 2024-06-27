@@ -5,11 +5,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Slf4j
-@Component
 class FinalAssembler {
 
   private final List<WenflonDynamicProxy<?>> wenflons;
