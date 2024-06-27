@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.conditions;
+package com.yosik.wenflon.spring_tests.conditions.happy_path;
 
 import com.yosik.wenflon.FinalAssemblerConfig;
 import com.yosik.wenflon.PivotProvider;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
 @ContextConfiguration(classes = {TestConfig.class, FinalAssemblerConfig.class})
-@TestPropertySource("classpath:conditions/application-test.properties")
+@TestPropertySource("classpath:conditions/application-test_happypath.properties")
 public class ConditionsTest {
 
   @Autowired Testable wenflonProxyBean;
