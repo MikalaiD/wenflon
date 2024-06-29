@@ -17,7 +17,7 @@ class FinalAssembler {
   @PostConstruct
   private void assemble() {
     log.info("Starting assembling - adding conditions and pivot providers");
-    validate();
+    validateAtLeastOnePivotProviderIsPresent();
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
     wenflons.forEach(wenflon -> wenflon.addPivotProvider(pivotProviders));
     // todo add post validation - throw an exception in case there is something wrong with
@@ -31,14 +31,10 @@ class FinalAssembler {
     // soft(fall back to some default implementation)
   }
 
-  private void validate() {
-    verifyAtLeastOnePivotProviderIsPresent();
-  }
-
-  private void verifyAtLeastOnePivotProviderIsPresent() {
+  private void validateAtLeastOnePivotProviderIsPresent() {
     if (pivotProviders.isEmpty()) {
       throw new BeanDefinitionValidationException(
-          "At least one bean implementing PivotProvider should be present in context");
+              "At least one bean implementing PivotProvider should be present in context");
     }
   }
 }

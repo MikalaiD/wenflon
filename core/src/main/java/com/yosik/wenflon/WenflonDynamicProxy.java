@@ -3,21 +3,29 @@ package com.yosik.wenflon;
 import com.yosik.wenflon.exceptions.WenflonException;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
 public class WenflonDynamicProxy<T> {
 
-  private static final String DEFAULT_KEY_WORD = "default";
+  static final String DEFAULT_KEYWORD = "default";
+  private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;
   public static final String CANNOT_DEFINE_IMPL =
       "Neither can define implementation, nor can find the default one. Please check wenflon.conditions.* properties or beans declarations";
+
+  @Getter(AccessLevel.PACKAGE)
   private final Map<Implementation, Predicate<String>> conditionalImplementationCases;
-  @Getter private Optional<Implementation> defaultImplementation;
+
+  @Getter private Set<Implementation> defaultImplementation;
   @Getter private final Class<T> representedInterface;
   private PivotProvider<?> pivotProvider;
 
@@ -27,7 +35,7 @@ public class WenflonDynamicProxy<T> {
     this.representedInterface = representedInterface;
     conditionalImplementationCases = new HashMap<>();
     wenflonProxy = createProxy();
-    defaultImplementation = Optional.empty();
+    defaultImplementation = new HashSet<>();
   }
 
   private T createProxy() {
@@ -53,18 +61,23 @@ public class WenflonDynamicProxy<T> {
         .findFirst()
         .orElseGet(
             () ->
-                this.getDefaultImplementation()
+                this.getDefaultImplementation().stream()
+                    .findAny()
                     .map(Implementation::getBean)
                     .orElseThrow(() -> new WenflonException(CANNOT_DEFINE_IMPL)));
     // todo #15 cover in tests
   }
 
-  public String getName() {
+  String getName() {
     return String.format("wenflon-%s", this.representedInterface.getSimpleName());
   }
 
-  public String getProxyName() {
+  String getProxyName() {
     return String.format("wproxy-%s", this.representedInterface.getSimpleName());
+  }
+
+  String getRepresentedInterfaceName() {
+    return this.representedInterface.getSimpleName();
   }
 
   void addConditions(final WenflonProperties properties) {
@@ -78,17 +91,25 @@ public class WenflonDynamicProxy<T> {
       final Map.Entry<Implementation, Predicate<String>> entry) {
     final var impl = entry.getKey();
     final var isDefaultImpl =
-        properties
-            .getConditions()
-            .get(impl.getBeanName())
-            .contains(DEFAULT_KEY_WORD); // todo #15 write test so default can be present with other
-    // todo #15 write test & validation that only one implementation can be default; in final
-    // assembler
+        properties.getConditions().get(impl.getBeanName()).contains(DEFAULT_KEYWORD);
     if (isDefaultImpl) {
-      this.defaultImplementation = Optional.of(impl);
+      validateNumberOfDefaultImpls(impl);
+      this.defaultImplementation.add(impl);
     } else {
       conditionalImplementationCases.put(
           impl, s -> properties.getConditions().get(impl.getBeanName()).contains(s));
+    }
+  }
+
+  private void validateNumberOfDefaultImpls(final Implementation impl) {
+    if (this.defaultImplementation.size() >= MAX_DEFAULT_IMPL_ALLOWED) {
+      throw new BeanDefinitionValidationException(
+          "Too many default default implementations declared. Current maximum per wenflon is %s. %s is declared as %s default implementation for %s"
+              .formatted(
+                  MAX_DEFAULT_IMPL_ALLOWED,
+                  impl.getBeanName(),
+                  MAX_DEFAULT_IMPL_ALLOWED + 1,
+                  this.getRepresentedInterfaceName()));
     }
   }
 
@@ -111,7 +132,7 @@ public class WenflonDynamicProxy<T> {
   @AllArgsConstructor
   @EqualsAndHashCode(of = "bean")
   @Getter
-  private static class Implementation {
+  static class Implementation {
     private final Object bean;
     private final String beanName;
   }

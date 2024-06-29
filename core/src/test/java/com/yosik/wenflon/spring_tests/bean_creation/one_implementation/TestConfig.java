@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.bean_creation_one_implementation;
+package com.yosik.wenflon.spring_tests.bean_creation.one_implementation;
 
 import com.yosik.wenflon.*;
 import com.yosik.wenflon.spring_tests._common.*;

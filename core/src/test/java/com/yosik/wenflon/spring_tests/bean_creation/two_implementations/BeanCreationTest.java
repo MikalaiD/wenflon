@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.bean_creation_two_implementations;
+package com.yosik.wenflon.spring_tests.bean_creation.two_implementations;
 
 import com.yosik.wenflon.*;
 import com.yosik.wenflon.spring_tests._common.ClassAsWenflon;
@@ -31,23 +31,22 @@ class BeanCreationTest {
 
   @Autowired WenflonProperties properties;
 
-  @Autowired
-  ClassAsWenflon classAsWenflon;
+  @Autowired ClassAsWenflon classAsWenflon;
 
   @Test()
   void beans_are_created_correctly() {
-    Assertions.assertThat(primaryTestable).isNotNull();
-    Assertions.assertThat(primaryTestable).isInstanceOf(Proxy.class);
-    Assertions.assertThat(testableA).isNotNull();
-    Assertions.assertThat(testableA).isNotInstanceOf(Proxy.class);
-    Assertions.assertThat(testableB).isNotNull();
-    Assertions.assertThat(testableB).isNotInstanceOf(Proxy.class);
-    Assertions.assertThat(testableA).isNotEqualTo(testableB);
-    Assertions.assertThat(testableA).isNotEqualTo(primaryTestable);
-    Assertions.assertThat(testableB).isNotEqualTo(primaryTestable);
+    Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+    Assertions.assertThat(testableA)
+        .isNotNull()
+        .isNotInstanceOf(Proxy.class)
+        .isNotEqualTo(testableB)
+        .isNotEqualTo(primaryTestable);
+    Assertions.assertThat(testableB)
+        .isNotNull()
+        .isNotInstanceOf(Proxy.class)
+        .isNotEqualTo(primaryTestable);
     Assertions.assertThat(properties.getConditions()).isNotNull();
     Assertions.assertThat(properties.getConditions().entrySet()).hasSize(2);
-    Assertions.assertThat(classAsWenflon).isNotNull();
-    Assertions.assertThat(classAsWenflon).isNotInstanceOf(Proxy.class);
+    Assertions.assertThat(classAsWenflon).isNotNull().isNotInstanceOf(Proxy.class);
   }
 }
