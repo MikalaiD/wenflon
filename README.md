@@ -98,6 +98,16 @@ wenflon:
     stdInsuranceRiskEngine: EU, default
     newInsuranceRiskEngine: US
 ```
+At the same time only ```1``` default implementations are allowed per wenflon. The example below will
+throw BeanDefinitionValidationException:
+
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, default
+    newInsuranceRiskEngine: US, default
+```
+
 #### strict behaviour TODO
 If property ```wenflon.strict``` is set to true (default is false) then
 proxy will require presence of an appropriate condition. In case pivot value provided by pivot provider does not
