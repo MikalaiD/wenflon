@@ -1,7 +1,12 @@
 package com.yosik.wenflon.spring_tests.bean_creation.one_implementation;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.yosik.wenflon.*;
+import com.yosik.wenflon.exceptions.WenflonException;
+import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.Testable;
+import com.yosik.wenflon.spring_tests._common.TestableStrict;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,21 +20,21 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
-@ContextConfiguration(classes = {TestConfig.class, FinalAssemblerConfig.class})
-public class SingleBeanCreationTest {
+class SingleBeanCreationTest {
 
-  @Autowired Testable primaryTestable;
-
-  @Autowired
-  @Qualifier("testableA")
-  Testable testableA;
-
-  @Autowired WenflonProperties properties;
 
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-empty.properties")
+  @ContextConfiguration(classes = {StdConfig.class, FinalAssemblerConfig.class})
   class TestWithNoPropertiesAtAll {
+    @Autowired Testable primaryTestable;
+
+    @Autowired
+    @Qualifier("testableA")
+    Testable testableA;
+
+    @Autowired WenflonProperties properties;
 
     @Test()
     void beans_are_created_correctly() {
@@ -41,21 +46,24 @@ public class SingleBeanCreationTest {
       Assertions.assertThat(properties.getConditions()).isNull();
     }
 
-    //    @Test
-    //    void basic_call_works(){
-    //
-    // Assertions.assertThat(primaryTestable.test()).isEqualTo(ServiceA.class.getCanonicalName());
-    //    }
-    // todo #15 add functionality
-    // no conditions - one implementation -> add it to default
-    // there are conditions - no default impl by default, must expicitely specify it
-    // add test for the exception
+    @Test
+    void basic_call_works_sole_declared_impl_is_chosen_as_default() {
+      Assertions.assertThat(primaryTestable.test()).isEqualTo(ServiceA.class.getCanonicalName());
+    }
   }
 
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-always-false.properties")
+  @ContextConfiguration(classes = {StdConfig.class, FinalAssemblerConfig.class})
   class TestWithConditionToFalse_DefaultBehaviour_TheBeanStillReturned {
+    @Autowired Testable primaryTestable;
+
+    @Autowired
+    @Qualifier("testableA")
+    Testable testableA;
+
+    @Autowired WenflonProperties properties;
 
     @Test()
     void beans_are_created_correctly() {
@@ -64,9 +72,39 @@ public class SingleBeanCreationTest {
           .isNotNull()
           .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
-      Assertions.assertThat(properties.getConditions()).isNull();
+      Assertions.assertThat(properties.getConditions()).isNotNull();
+    }
+    @Test
+    void basic_call_works_sole_conditional_impl_is_chosen_as_default() {
+      Assertions.assertThat(primaryTestable.test()).isEqualTo(ServiceA.class.getCanonicalName());
+    }
+  }
+  @Nested
+  @TestPropertySource(
+      "classpath:bean_creation_one_implementation/application-test-sole-not-default.properties")
+  @ContextConfiguration(classes = {StrictSoleImplConfig.class, FinalAssemblerConfig.class})
+  class TestWithConditionToFalse_SoleBeanAsDefaultIsFalse_exception_is_thrown {
+    @Autowired TestableStrict primaryTestable;
+
+    @Autowired
+    @Qualifier("testableD")
+    TestableStrict testableD;
+
+    @Autowired WenflonProperties properties;
+
+    @Test()
+    void beans_are_created_correctly() {
+      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(testableD)
+          .isNotNull()
+          .isNotInstanceOf(Proxy.class)
+          .isNotEqualTo(primaryTestable);
+      Assertions.assertThat(properties.getConditions()).isNotNull();
+    }
+    @Test
+    void basic_call_throws_exception_since_there_is_strict_validation() {
+      assertThrows(WenflonException.class, ()->primaryTestable.test());
     }
   }
 
-  // TODO test for strict validation
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(WenflonBeanPostProcessor.class)
-public class TestConfig {
+public class StdConfig {
 
     @Bean
     Testable testableA(){

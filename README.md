@@ -109,6 +109,6 @@ wenflon:
 ```
 
 #### strict behaviour TODO
-If property ```wenflon.strict``` is set to true (default is false) then
+If property ```wenflon.soleImplAsImplicitDefault``` is set to true (default is false) then
 proxy will require presence of an appropriate condition. In case pivot value provided by pivot provider does not
 meet this sole condition, the application will throw a SomeRuntimeException (TODO)
