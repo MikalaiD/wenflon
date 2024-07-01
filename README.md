@@ -108,7 +108,11 @@ wenflon:
     newInsuranceRiskEngine: US, default
 ```
 
-#### strict behaviour TODO
-If property ```wenflon.soleImplAsImplicitDefault``` is set to true (default is false) then
-proxy will require presence of an appropriate condition. In case pivot value provided by pivot provider does not
-meet this sole condition, the application will throw a SomeRuntimeException (TODO)
+#### Implicit default implementation
+If there is only **one implementation** of an interface annotated with _@Wenflon_ and **no conditions** is provided for this implementation,
+then this implementation is considered as default implementation.
+
+If there is only **one implementation** of an interface annotated with _@Wenflon_ and **condition is present** for it in properties,
+then this implementation is considered as default implementation depending on ```soleConditionalImplAsImplicitDefault``` @Wenflon property value:
+- if ```true``` (_by default_) then this implementation is considered as default implementation, and the condition won't be tested;
+- if ```false``` then this implementation is considered as conditional implementation, and will be used only if the condition is met; otherwise exception will be thrown.
