@@ -32,18 +32,13 @@ We add dependency to the project:
         <dependency>
             <groupId>com.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.4-SNAPSHOT</version>
         </dependency>
 ```
-Then create 2 beans - WenflonBeanPostprocessor and PivotProvider<String>. PivoteProvider is a bean that will return **pivot** at runtime 
+Then create PivotProvider<String> bean - it will return **pivot** at runtime.
 The **pivot** is the value based on which the decision on which implementation to be used is made. In this example - pivot is user's assigned market value, 
 which we obtain from _SecurityContext_. 
 ```java
-    @Bean
-    WenflonBeanPostprocessor wenflonBeanPostprocessor() {
-        return new WenflonBeanPostprocessor();
-    }
-
     @Bean
     PivotProvider<String> defaultPivotProvider(){
         return ()-> Optional.of(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
@@ -65,7 +60,7 @@ Final step - in the application properties add conditions under which old or new
 wenflon:
   conditions:
     stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
-    newInsuranceRiskEngine: US
+    newInsuranceRiskEngine: US, default
 ```
 
 Run the app and call the endpoint with different users to see results 
