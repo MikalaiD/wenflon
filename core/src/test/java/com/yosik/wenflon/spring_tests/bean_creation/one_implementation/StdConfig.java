@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.bean_creation_one_implementation;
+package com.yosik.wenflon.spring_tests.bean_creation.one_implementation;
 
 import com.yosik.wenflon.*;
 import com.yosik.wenflon.spring_tests._common.*;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(WenflonBeanPostProcessor.class)
-public class TestConfig {
+public class StdConfig {
 
     @Bean
     Testable testableA(){

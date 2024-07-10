@@ -4,4 +4,6 @@ import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Wenflon {}
+public @interface Wenflon {
+    boolean soleConditionalImplAsImplicitDefault() default true;
+}

@@ -134,16 +134,16 @@ public class WenflonBeanPostProcessor
     if (beanDefinition.getBeanClassName() != null) {
       return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
     }
-    if (beanDefinition.getSource() instanceof StandardMethodMetadata) { //todo refactor
+    if (beanDefinition.getSource() instanceof StandardMethodMetadata standardMethodMetadata) {
       return Optional.of(
           Class.forName(
-              ((StandardMethodMetadata) beanDefinition.getSource())
+                  standardMethodMetadata
                   .getIntrospectedMethod()
                   .getReturnType()
                   .getName()));
     }
-    if (beanDefinition.getSource() instanceof Class<?>) {
-      return Optional.of(Class.forName(((Class<?>) beanDefinition.getSource()).getName()));
+    if (beanDefinition.getSource() instanceof Class<?> source) {
+      return Optional.of(Class.forName(source.getName()));
     }
     return Optional.empty();
   }

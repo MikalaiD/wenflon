@@ -7,4 +7,4 @@ logging:
 wenflon:
   conditions:
     stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
-    newInsuranceRiskEngine: US
+    newInsuranceRiskEngine: US, default
