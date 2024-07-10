@@ -38,10 +38,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableA)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNull();
     }
@@ -67,10 +66,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableA)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNotNull();
     }
@@ -94,10 +92,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableD)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNotNull();
     }

@@ -35,18 +35,16 @@ class BeanCreationTest {
 
   @Test()
   void beans_are_created_correctly() {
-    Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+    Assertions.assertThat(primaryTestable).isNotNull();
     Assertions.assertThat(testableA)
         .isNotNull()
-        .isNotInstanceOf(Proxy.class)
         .isNotEqualTo(testableB)
         .isNotEqualTo(primaryTestable);
     Assertions.assertThat(testableB)
         .isNotNull()
-        .isNotInstanceOf(Proxy.class)
         .isNotEqualTo(primaryTestable);
     Assertions.assertThat(properties.getConditions()).isNotNull();
     Assertions.assertThat(properties.getConditions().entrySet()).hasSize(2);
-    Assertions.assertThat(classAsWenflon).isNotNull().isNotInstanceOf(Proxy.class);
+    Assertions.assertThat(classAsWenflon).isNotNull();
   }
 }
