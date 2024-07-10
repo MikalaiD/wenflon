@@ -14,3 +14,4 @@ import org.springframework.context.annotation.Configuration;
 public class WenflonProperties {
   private Map<String, List<String>> conditions;
 }
+

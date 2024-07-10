@@ -32,18 +32,13 @@ We add dependency to the project:
         <dependency>
             <groupId>com.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.4-SNAPSHOT</version>
         </dependency>
 ```
-Then create 2 beans - WenflonBeanPostprocessor and PivotProvider<String>. PivoteProvider is a bean that will return **pivot** at runtime 
+Then create PivotProvider<String> bean - it will return **pivot** at runtime.
 The **pivot** is the value based on which the decision on which implementation to be used is made. In this example - pivot is user's assigned market value, 
 which we obtain from _SecurityContext_. 
 ```java
-    @Bean
-    WenflonBeanPostprocessor wenflonBeanPostprocessor() {
-        return new WenflonBeanPostprocessor();
-    }
-
     @Bean
     PivotProvider<String> defaultPivotProvider(){
         return ()-> Optional.of(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
@@ -65,7 +60,7 @@ Final step - in the application properties add conditions under which old or new
 wenflon:
   conditions:
     stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
-    newInsuranceRiskEngine: US
+    newInsuranceRiskEngine: US, default
 ```
 
 Run the app and call the endpoint with different users to see results 
@@ -76,14 +71,43 @@ curl -u euUser:password1 http://localhost:8080/rank
 curl -u usUser:password2 http://localhost:8080/rank
 ```
 
-### Behaviour if single implementation is found
+### Default implementation 
+Conditions recognize ```default``` keyword which can be used together with other conditions. The ```default```
+will instruct wenflon to use marked implementation in case pivot value is not 
+found in any of given conditions. 
 
-#### default behaviour 
-If there is only one bean of the implemented interface then pivot provider
-and conditions from properties are ignored 
-and proxy passes all the calls directly to the bean.
+In the adjusted example below properties would mean that for any user not from US market 
+the _stdInsuranceRiskEngine_ will be used.
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: default
+    newInsuranceRiskEngine: US
+```
+For more readability, ```default``` can be used with other conditions. The example below will produce the same result 
+as the one above:
 
-#### strict behaviour TODO
-If property ```wenflon.strict``` is set to true (default is false) then
-proxy will require presence of an appropriate condition. In case pivot value provided by pivot provider does not
-meet this sole condition, the application will throw a SomeRuntimeException (TODO)
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, default
+    newInsuranceRiskEngine: US
+```
+At the same time only ```1``` default implementations are allowed per wenflon. The example below will
+throw BeanDefinitionValidationException:
+
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, default
+    newInsuranceRiskEngine: US, default
+```
+
+#### Implicit default implementation
+If there is only **one implementation** of an interface annotated with _@Wenflon_ and **no conditions** is provided for this implementation,
+then this implementation is considered as default implementation.
+
+If there is only **one implementation** of an interface annotated with _@Wenflon_ and **condition is present** for it in properties,
+then this implementation is considered as default implementation depending on ```soleConditionalImplAsImplicitDefault``` @Wenflon property value:
+- if ```true``` (_by default_) then this implementation is considered as default implementation, and the condition won't be tested;
+- if ```false``` then this implementation is considered as conditional implementation, and will be used only if the condition is met; otherwise exception will be thrown.
