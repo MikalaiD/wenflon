@@ -26,7 +26,6 @@ public class WenflonBeanPostProcessor
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
   private final Map<Class<?>, Set<String>> wenflonInterfacesToBeanNames = new HashMap<>();
-  private final CountDownLatch latch = new CountDownLatch(1);
 
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
@@ -70,7 +69,7 @@ public class WenflonBeanPostProcessor
   @Override
   public Object postProcessBeforeInitialization(
       @NonNull final Object bean, @NonNull final String beanName) throws BeansException {
-    // here we can just strip off @Primary from the wenflon eligible beans
+    //todo here we can just strip off @Primary from the wenflon eligible beans
     // here we assume class will implement only one interface under wenflon
     if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
       putBehindAppropriateWenflons(bean, beanName);

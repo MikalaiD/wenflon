@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
-public class WenflonDynamicProxy<T> {
+class WenflonDynamicProxy<T> {
 
   static final String DEFAULT_KEYWORD = "default";
   private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;

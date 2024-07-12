@@ -23,11 +23,10 @@ class FinalAssembler {
 
   @EventListener
   public void handleContextRefresh(final ContextRefreshedEvent event) {
-    if(count<1){
+    if(count--<0){
       return;
     }
     log.info("All beans have been initialized. Starting assembling - adding conditions and pivot providers");
-    count--;
     validateAtLeastOnePivotProviderIsPresent();
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
     wenflons.forEach(WenflonDynamicProxy::trySetImplicitDefault);
