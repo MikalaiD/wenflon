@@ -1,5 +1,6 @@
 package com.yosik.wenflon.spring_tests.conditions.happy_path;
 
+import com.yosik.wenflon.Config;
 import com.yosik.wenflon.WenflonBeanPostProcessor;
 import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(WenflonBeanPostProcessor.class)
+@Import(Config.class)
 public class TestConfig {
 
     @Bean

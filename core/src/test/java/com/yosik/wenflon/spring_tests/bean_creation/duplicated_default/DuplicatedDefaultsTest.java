@@ -2,7 +2,7 @@ package com.yosik.wenflon.spring_tests.bean_creation.duplicated_default;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.yosik.wenflon.FinalAssemblerConfig;
+import com.yosik.wenflon.Config;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,10 +22,10 @@ class DuplicatedDefaultsTest {
       try (AnnotationConfigApplicationContext context =
                    new AnnotationConfigApplicationContext()) {
         context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("test-props", stubTestProperties()));
-        context.register(TestConfig.class, FinalAssemblerConfig.class);
+        context.register(TestConfig.class);
         context.refresh();
       }
-    }).isInstanceOf(BeanCreationException.class).hasCauseInstanceOf(BeanDefinitionValidationException.class);
+    }).isInstanceOf(BeanDefinitionValidationException.class);
   }
 
   private static HashMap<String, Object> stubTestProperties() {

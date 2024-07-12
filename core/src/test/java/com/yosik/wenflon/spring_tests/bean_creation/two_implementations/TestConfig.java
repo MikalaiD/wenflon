@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(WenflonBeanPostProcessor.class)
+@Import(Config.class)
 public class TestConfig {
 
     @Bean

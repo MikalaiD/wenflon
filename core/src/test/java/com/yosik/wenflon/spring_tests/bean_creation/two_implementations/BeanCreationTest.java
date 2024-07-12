@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
-@ContextConfiguration(classes = {TestConfig.class, FinalAssemblerConfig.class})
+@ContextConfiguration(classes = {TestConfig.class})
 @TestPropertySource("classpath:bean_creation_two_implementations/application-test.properties")
 class BeanCreationTest {
 
