@@ -19,13 +19,14 @@ class FinalAssembler {
   private final List<WenflonDynamicProxy<?>> wenflons;
   private final WenflonProperties properties;
   private final List<PivotProvider<?>> pivotProviders;
-  private int count = 1;
+  private boolean allBeansInitialized = false;
 
   @EventListener
   public void handleContextRefresh(final ContextRefreshedEvent event) {
-    if(count--<0){
+    if(allBeansInitialized){
       return;
     }
+    allBeansInitialized=true;
     log.info("All beans have been initialized. Starting assembling - adding conditions and pivot providers");
     validateAtLeastOnePivotProviderIsPresent();
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
