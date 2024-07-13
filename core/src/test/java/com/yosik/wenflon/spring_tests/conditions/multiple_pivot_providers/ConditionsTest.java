@@ -51,4 +51,8 @@ class ConditionsTest {
     verify(pivotProviderX, times(1)).getPivot();
     verify(pivotProviderY, times(1)).getPivot();
   }
+
+  //todo write test - only one pivot provider and its name does not match declare in wenflon - exception
+  //todo write test - 2 pivot providers and one is primary but in wenflon none is specified - take primary?
+  //todo write test - 2 pivot providers, none is primary, no provider name in wenflon - exception
 }
