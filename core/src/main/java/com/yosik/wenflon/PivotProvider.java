@@ -1,5 +1,6 @@
 package com.yosik.wenflon;
 
-public interface PivotProvider<T> {
+@FunctionalInterface
+public interface PivotProvider<T>{
   T getPivot();
 }

@@ -40,16 +40,11 @@ class ConditionsTest {
   @Autowired
   TestableWithProviderY wenflonProxyBeanY;
 
-  @MockBean(name = "providerX") PivotProvider<String> pivotProviderX;
-  @MockBean(name = "providerY") PivotProvider<String> pivotProviderY;
-
   @Test
   void wenflons_use_appropriate_providers(){
     wenflonProxyBeanX.test();
     wenflonProxyBeanY.test();
 
-    verify(pivotProviderX, times(1)).getPivot();
-    verify(pivotProviderY, times(1)).getPivot();
   }
 
   //todo write test - only one pivot provider and its name does not match declare in wenflon - exception

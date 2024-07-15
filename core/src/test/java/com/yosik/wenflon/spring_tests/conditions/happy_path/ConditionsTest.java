@@ -1,5 +1,7 @@
 package com.yosik.wenflon.spring_tests.conditions.happy_path;
 
+import static org.mockito.Mockito.when;
+
 import com.yosik.wenflon.Config;
 import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.WenflonProperties;
@@ -7,6 +9,7 @@ import com.yosik.wenflon.spring_tests._common.ServiceA;
 import com.yosik.wenflon.spring_tests._common.ServiceB;
 import com.yosik.wenflon.spring_tests._common.ServiceC;
 import com.yosik.wenflon.spring_tests._common.Testable;
+import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,14 +17,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.stream.Stream;
-
-import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(WenflonProperties.class)
@@ -31,13 +30,14 @@ class ConditionsTest {
 
   @Autowired Testable wenflonProxyBean;
 
-  @MockBean PivotProvider<String> pivotProvider;
+  @SpyBean
+  PivotProvider<String> pivotProviderSpy;
 
   @ParameterizedTest
   @MethodSource("getTestConfigurations")
   void condition_work(Class<?> implementationClass, String pivot) {
     // given
-    when(pivotProvider.getPivot()).thenReturn(pivot);
+    when(pivotProviderSpy.getPivot()).thenReturn(pivot);
 
     // when
     String result = wenflonProxyBean.test();

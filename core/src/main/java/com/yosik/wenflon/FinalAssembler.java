@@ -1,16 +1,11 @@
 package com.yosik.wenflon;
 
-import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.Ordered;
-import org.springframework.core.PriorityOrdered;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -18,7 +13,7 @@ class FinalAssembler {
 
   private final List<WenflonDynamicProxy<?>> wenflons;
   private final WenflonProperties properties;
-  private final List<PivotProvider<?>> pivotProviders;
+  private final List<PivotProviderWrapper<?>> pivotProviders;
   private boolean allBeansInitialized = false;
 
   @EventListener

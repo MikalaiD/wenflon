@@ -2,7 +2,7 @@ package com.yosik.wenflon;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +10,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.core.Ordered;
-import org.springframework.core.PriorityOrdered;
 import org.springframework.core.type.StandardMethodMetadata;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,17 +25,34 @@ public class WenflonBeanPostProcessor
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
   private final Map<Class<?>, Set<String>> wenflonInterfacesToBeanNames = new HashMap<>();
+  private final Set<String> pivotProviderBeanNames = new HashSet<>();
 
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
-    identifyWenflonAnnotatedInterfaces(registry);
+    identifyWenflonAnnotatedInterfaces(registry); //todo split into 2 classes?
+    identifyPivotProviders(registry);
     registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(registry);
+    registerPivotProviders(registry);
+  }
+
+
+  private void identifyPivotProviders(final BeanDefinitionRegistry registry) {
+    Arrays.stream(registry.getBeanDefinitionNames())
+            .filter(isPivotProvider(registry))
+            .forEach(pivotProviderBeanNames::add);
+  }
+
+  private static Predicate<String> isPivotProvider(final BeanDefinitionRegistry registry) {
+    return name -> {
+      final var classByBeanName = getClassByBeanName(registry, name);
+      return classByBeanName.isPresent() && classByBeanName.get().equals(PivotProvider.class);
+    };
   }
 
   private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
     wenflonInterfacesToBeanNames.putAll(
-        Arrays.stream(registry.getBeanDefinitionNames())
+        Arrays.stream(registry.getBeanDefinitionNames())//todo maybe beandefinitionmap is better and can simplify a LOT of code
             .flatMap(name -> toEntries(registry, name).stream())
             .collect(
                 Collectors.toMap(
@@ -115,6 +131,25 @@ public class WenflonBeanPostProcessor
     wenflonBeanDefinition.setInstanceSupplier(() -> wenflon);
     registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
   }
+
+  private void registerPivotProviders(final BeanDefinitionRegistry registry) {
+    pivotProviderBeanNames.forEach(
+            name-> registerPivotProviderCaseBean(name, registry)
+    );
+
+  }
+
+  private void registerPivotProviderCaseBean(final String name, final BeanDefinitionRegistry registry) {
+    GenericBeanDefinition pivotProviderBeanDefinition = new GenericBeanDefinition();
+    pivotProviderBeanDefinition.setBeanClass(PivotProviderWrapper.class);
+    pivotProviderBeanDefinition.setDependsOn(name);
+    ConstructorArgumentValues args = new ConstructorArgumentValues();
+    args.addGenericArgumentValue(new RuntimeBeanReference(name));
+    args.addGenericArgumentValue(name);
+    pivotProviderBeanDefinition.setConstructorArgumentValues(args);
+    registry.registerBeanDefinition(String.format("p-%s", name), pivotProviderBeanDefinition);
+  }
+
 
   private static List<Map.Entry<String, Class<?>>> toEntries(
       final BeanDefinitionRegistry registry, final String name) {

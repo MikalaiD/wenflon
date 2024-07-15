@@ -12,7 +12,7 @@ public class Config {
   FinalAssembler finalAssembler(
       final List<WenflonDynamicProxy<?>> wenflonDynamicProxies,
       final WenflonProperties properties,
-      final List<PivotProvider<?>> pivotProviders) {
+      final List<PivotProviderWrapper<?>> pivotProviders) {
     return new FinalAssembler(wenflonDynamicProxies, properties, pivotProviders);
   }
 
