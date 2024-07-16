@@ -1,8 +1,7 @@
-package com.yosik.wenflon.spring_tests.bean_creation.duplicated_default;
+package com.yosik.wenflon.spring_tests.bean_creation.nonexisting_provider_declared;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.yosik.wenflon.Config;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +12,11 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-class DuplicatedDefaultsTest {
+class NonExistentProviderChosenTest {
 
 
   @Test
-  void testBeanCreationException_ifFinalAssemblerDiscoversMultipleDefaultConditions() {
+  void testBeanCreationException_ifWenflonSpecifiesNonExistentPivotProvider() {
     assertThatThrownBy(() -> {
       try (AnnotationConfigApplicationContext context =
                    new AnnotationConfigApplicationContext()) {
@@ -30,9 +29,8 @@ class DuplicatedDefaultsTest {
 
   private static HashMap<String, Object> stubTestProperties() {
     final HashMap<String, Object> properties = new HashMap<>();
-    properties.put("wenflon.conditions.testableA", "panda, koala");
-    properties.put("wenflon.conditions.testableB", "grizzly, white bear, default");
-    properties.put("wenflon.conditions.testableC", "default");
+    properties.put("wenflon.conditions.testableG", "panda, koala");
+    properties.put("wenflon.conditions.testableH", "grizzly, white bear, default");
     return properties;
   }
 }

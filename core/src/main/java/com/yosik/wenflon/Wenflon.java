@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Wenflon {
     boolean soleConditionalImplAsImplicitDefault() default true;
-    String pivotProviderBeanName() default "";
+    String pivotProviderBeanName() default "none";
 }

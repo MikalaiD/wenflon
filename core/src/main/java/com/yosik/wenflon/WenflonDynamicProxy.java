@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
 class WenflonDynamicProxy<T> {
@@ -21,6 +22,7 @@ class WenflonDynamicProxy<T> {
   private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;
   public static final String CANNOT_DEFINE_IMPL = // todo move to a separate util class
       "Neither can find conditional implementation, nor can find the default one. Please check wenflon.conditions.* properties, or beans declarations, or 'soleConditionalImplAsImplicitDefault' property on @Wenflon";
+  public static final String NONE = "none";
 
   private final Set<Implementation> declaredImplementations;
 
@@ -124,7 +126,7 @@ class WenflonDynamicProxy<T> {
 
   private void validateNumberOfDefaultImpls(final Implementation impl) {
     if (this.defaultImplementations.size() >= MAX_DEFAULT_IMPL_ALLOWED) {
-      throw new BeanDefinitionValidationException(
+      throw new BeanCreationException(
           "Too many default default implementations declared. Current maximum per wenflon is %s. %s is declared as %s default implementation for %s" // todo move to separate util class
               .formatted(
                   MAX_DEFAULT_IMPL_ALLOWED,
@@ -144,8 +146,8 @@ class WenflonDynamicProxy<T> {
   }
 
   void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
-    if (pivotProviders.size() == 1) {
-      this.pivotProvider = pivotProviders.get(0); //todo write tests to cover it
+    if (pivotProviders.size() == 1 && pivotProviderBeanName.equals(NONE)) {
+      this.pivotProvider = pivotProviders.get(0);
       //todo write documentation + examples to cover it
       return;
     }
@@ -153,7 +155,10 @@ class WenflonDynamicProxy<T> {
         pivotProviders.stream()
             .filter(provider -> provider.getBeanName().equals(pivotProviderBeanName))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(
+                () ->
+                    new BeanCreationException(
+                        "Cannot find pivot provider. Either none was declared. Or pivot provider name used in @Wenflon cannot be match with any bean.")); //todo move text to util
   }
 
   @AllArgsConstructor

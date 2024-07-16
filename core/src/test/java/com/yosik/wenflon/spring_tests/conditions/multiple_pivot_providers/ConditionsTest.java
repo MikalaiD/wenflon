@@ -11,6 +11,7 @@ import com.yosik.wenflon.spring_tests._common.ServiceE;
 import com.yosik.wenflon.spring_tests._common.ServiceF;
 import com.yosik.wenflon.spring_tests._common.ServiceG;
 import com.yosik.wenflon.spring_tests._common.ServiceH;
+import com.yosik.wenflon.spring_tests._common.Testable;
 import com.yosik.wenflon.spring_tests._common.TestableWithProviderX;
 import com.yosik.wenflon.spring_tests._common.TestableWithProviderY;
 import java.util.stream.Stream;
@@ -61,13 +62,12 @@ class ConditionsTest {
     assertThat(outputY).isEqualTo(implementationClassY.getCanonicalName());
   }
 
-  //todo write test - only one pivot provider and its name does not match declare in wenflon - exception
-  //todo write test - 2 pivot providers and one is primary but in wenflon none is specified - take primary?
-  //todo write test - 2 pivot providers, none is primary, no provider name in wenflon - exception
   public static Stream<Arguments> getTestConfigurations() {
     return Stream.of(
             Arguments.of(ServiceE.class, "orange", ServiceH.class, "France"),
             Arguments.of(ServiceF.class, "non-existing-value", ServiceH.class, "France"),
-            Arguments.of(ServiceF.class, "red", ServiceG.class, "US"));
+            Arguments.of(ServiceF.class, "red", ServiceG.class, "US"),
+            Arguments.of(ServiceF.class, "red", ServiceG.class, "US")
+            );
   }
 }

@@ -94,7 +94,7 @@ wenflon:
     newInsuranceRiskEngine: US
 ```
 At the same time only ```1``` default implementations are allowed per wenflon. The example below will
-throw BeanDefinitionValidationException:
+throw BeanCreationException:
 
 ```yaml
 wenflon:
