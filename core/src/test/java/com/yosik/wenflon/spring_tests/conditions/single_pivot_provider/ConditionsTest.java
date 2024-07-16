@@ -1,4 +1,4 @@
-package com.yosik.wenflon.spring_tests.conditions.happy_path;
+package com.yosik.wenflon.spring_tests.conditions.single_pivot_provider;
 
 import static org.mockito.Mockito.when;
 

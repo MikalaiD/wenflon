@@ -5,6 +5,7 @@ import com.yosik.wenflon.PivotProvider;
 import com.yosik.wenflon.spring_tests._common.ServiceE;
 import com.yosik.wenflon.spring_tests._common.ServiceF;
 import com.yosik.wenflon.spring_tests._common.ServiceG;
+import com.yosik.wenflon.spring_tests._common.ServiceH;
 import com.yosik.wenflon.spring_tests._common.StubPivotProvider;
 import com.yosik.wenflon.spring_tests._common.TestableWithProviderX;
 import com.yosik.wenflon.spring_tests._common.TestableWithProviderY;
@@ -33,6 +34,10 @@ public class TestConfig {
   @Bean
   TestableWithProviderY testableG() {
     return new ServiceG();
+  }
+  @Bean
+  TestableWithProviderY testableH() {
+    return new ServiceH();
   }
 
   @Bean
