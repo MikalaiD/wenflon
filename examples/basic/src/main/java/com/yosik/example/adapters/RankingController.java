@@ -1,6 +1,6 @@
-package com.yosik.basic.adapters;
+package com.yosik.example.adapters;
 
-import com.yosik.basic.ports.DecisionEngine;
+import com.yosik.example.ports.DecisionEngine;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

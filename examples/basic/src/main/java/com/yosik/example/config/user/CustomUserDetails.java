@@ -1,4 +1,4 @@
-package com.yosik.basic.config.user;
+package com.yosik.example.config.user;
 
 
 import lombok.Getter;

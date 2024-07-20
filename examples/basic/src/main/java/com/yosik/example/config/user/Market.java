@@ -1,4 +1,4 @@
-package com.yosik.basic.config.user;
+package com.yosik.example.config.user;
 
 public enum Market {
     EU,

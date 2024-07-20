@@ -1,8 +1,8 @@
-package com.yosik.basic.config;
+package com.yosik.example.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import com.yosik.basic.services.CustomUserDetailsService;
+import com.yosik.example.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +30,6 @@ public class SecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    // NoOpPasswordEncoder is used for simplicity, use a stronger encoder in production
     return NoOpPasswordEncoder.getInstance();
   }
 }
