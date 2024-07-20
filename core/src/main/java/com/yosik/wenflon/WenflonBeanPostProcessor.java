@@ -15,7 +15,7 @@ import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.core.type.StandardMethodMetadata;
+import org.springframework.core.type.MethodMetadata;
 import org.springframework.lang.NonNull;
 
 @RequiredArgsConstructor
@@ -63,7 +63,7 @@ public class WenflonBeanPostProcessor
   }
 
   private void registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(
-      BeanDefinitionRegistry registry) {
+      final BeanDefinitionRegistry registry) {
     this.wenflonInterfacesToBeanNames.entrySet().stream()
         .filter(WenflonBeanPostProcessor::filterAndLogInappropriateObjects)
         .forEach(
@@ -171,13 +171,9 @@ public class WenflonBeanPostProcessor
     if (beanDefinition.getBeanClassName() != null) {
       return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
     }
-    if (beanDefinition.getSource() instanceof StandardMethodMetadata standardMethodMetadata) {
+    if (beanDefinition.getSource() instanceof MethodMetadata methodMetadata) {
       return Optional.of(
-          Class.forName(
-                  standardMethodMetadata
-                  .getIntrospectedMethod()
-                  .getReturnType()
-                  .getName()));
+          Class.forName(methodMetadata.getReturnTypeName()));
     }
     if (beanDefinition.getSource() instanceof Class<?> source) {
       return Optional.of(Class.forName(source.getName()));
