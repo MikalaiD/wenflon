@@ -1,6 +1,6 @@
-package com.yosik.examples.basic.services;
+package com.yosik.examples.multiple_providers.services;
 
-import com.yosik.examples.basic.ports.DecisionEngine;
+import com.yosik.examples.multiple_providers.ports.DecisionEngine;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -11,6 +11,6 @@ public class NewInsuranceRiskEngine implements DecisionEngine {
     private final Random random = new Random();
     @Override
     public String rank() {
-        return "NEW ENGINE calculated your insurance risk score as " + random.nextInt(9);
+        return "NEW ENGINE calculated your insurance risk score  as " + random.nextInt(9);
     }
 }

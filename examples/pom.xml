@@ -15,6 +15,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>basic</module>
+        <module>multiple_providers</module>
     </modules>
 
     <properties>

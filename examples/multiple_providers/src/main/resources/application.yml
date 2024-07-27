@@ -1,0 +1,12 @@
+logging:
+  level:
+   org:
+    springframework:
+     security: DEBUG
+
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
+    newInsuranceRiskEngine: US, default
+    shallowKYCScanner: VIP
+    thoroughKYCScanner: default
