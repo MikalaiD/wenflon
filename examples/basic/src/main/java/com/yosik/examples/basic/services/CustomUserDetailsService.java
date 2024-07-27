@@ -1,11 +1,11 @@
-package com.yosik.example.services;
+package com.yosik.examples.basic.services;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.yosik.example.config.user.CustomUserDetails;
-import com.yosik.example.config.user.FeaturesRolloutGroup;
-import com.yosik.example.config.user.Market;
+import com.yosik.examples.basic.config.user.CustomUserDetails;
+import com.yosik.examples.basic.config.user.FeaturesRolloutGroup;
+import com.yosik.examples.basic.config.user.Market;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

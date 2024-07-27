@@ -1,7 +1,7 @@
-package com.yosik.example.config;
+package com.yosik.examples.basic.config;
 
-import com.yosik.example.config.user.CustomUserDetails;
-import com.yosik.example.config.user.Market;
+import com.yosik.examples.basic.config.user.CustomUserDetails;
+import com.yosik.examples.basic.config.user.Market;
 import com.yosik.wenflon.PivotProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

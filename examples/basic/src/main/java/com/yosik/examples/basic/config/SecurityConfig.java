@@ -1,8 +1,8 @@
-package com.yosik.example.config;
+package com.yosik.examples.basic.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import com.yosik.example.services.CustomUserDetailsService;
+import com.yosik.examples.basic.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

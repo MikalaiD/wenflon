@@ -1,4 +1,4 @@
-package com.yosik.example.ports;
+package com.yosik.examples.basic.ports;
 
 import com.yosik.wenflon.Wenflon;
 

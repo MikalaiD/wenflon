@@ -1,4 +1,4 @@
-package com.yosik;
+package com.yosik.examples.basic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

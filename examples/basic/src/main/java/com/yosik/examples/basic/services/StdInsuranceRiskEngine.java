@@ -1,6 +1,6 @@
-package com.yosik.example.services;
+package com.yosik.examples.basic.services;
 
-import com.yosik.example.ports.DecisionEngine;
+import com.yosik.examples.basic.ports.DecisionEngine;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
