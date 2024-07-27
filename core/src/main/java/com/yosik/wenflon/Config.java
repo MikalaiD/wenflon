@@ -1,11 +1,14 @@
 package com.yosik.wenflon;
 
 import java.util.List;
+
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
+@AutoConfiguration
 public class Config {
   @Bean
   @Primary
