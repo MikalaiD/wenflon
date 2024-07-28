@@ -32,7 +32,7 @@ We add dependency to the project:
         <dependency>
             <groupId>com.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
         </dependency>
 ```
 Then create PivotProvider<String> bean - it will return **pivot** at runtime.
@@ -71,7 +71,148 @@ curl -u euUser:password1 http://localhost:8080/rank
 curl -u usUser:password2 http://localhost:8080/rank
 ```
 
-### Default implementation 
+## MULTIPLE PROVIDERS EXAMPLE
+Scenario when one cannot rely just on single pivot provider is most likely.
+Let's then extend the previous example by adding another interface with @Wenflon.
+
+First, we add another interface annotated with @Wenflon as well as simple implementation and controller:
+```java
+@Wenflon
+public interface KYCScanner {
+    // Know Your Customer (KYC) - guidelines and regulations in financial services require professionals to verify
+    // the identity, suitability, and risks involved with maintaining a business relationship with a customer (Wiki)
+    String checkCustomer();
+}
+```
+```java
+@Service
+public class ShallowKYCScanner implements KYCScanner {
+    @Override
+    public String checkCustomer() {
+        return "Looks legit to me... Approved";
+    }
+}
+```
+
+```java
+@RestController
+@AllArgsConstructor
+public class KYCController {
+
+    private final KYCScanner kycScanner;
+
+    @GetMapping(path = "/scan")
+    public ResponseEntity<String> scan(){
+        return ResponseEntity.ok(kycScanner.checkCustomer());
+    }
+}
+```
+If we run the application at this stage and call the _/scan_ endpoint it will just work fine, even though neither wenflon conditions nor new pivot provider has been specified.
+```shell
+curl -u euUser:password1 http://localhost:8080/scan
+```
+The reason is implicit default implementation - if there is only one implementation @Wenflon jus uses it (see more in [Default Implementation](#default-implementation))
+
+Let's assume there is a business need to add a newer, more thorough scanner:
+```java
+@Slf4j
+@Service
+public class ThoroughKYCScanner  implements KYCScanner {
+    @Override
+    @SneakyThrows
+    public String checkCustomer() {
+        log.info("Verifying client's genealogy tree...");
+        Thread.sleep(5000);
+        return "We can trust this gentleman";
+    }
+}
+```
+If we try running the application now, it will run as well. Calling _**/rank**_ endpoint will work as well. However, the _**/scan**_
+endpoint will return 500 and the _WenflonException_ under the hood.
+```shell
+curl -u euUser:password1 http://localhost:8080/rank
+```
+```shell
+curl -u euUser:password1 http://localhost:8080/scan
+```
+The reason is simple - lack of conditions. Having more than one implementation @Wenflon cannot decide which to use.
+This issue could be resolved simply by specifying in properties that _shallowKYCScanner_ to be used by default while for users from EU 
+the _thoroughKYCScanner_ must be used.
+
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
+    newInsuranceRiskEngine: US, default
+    shallowKYCScanner: default
+    thoroughKYCScanner: EU
+```
+Quick check presents expected result:
+```shell
+curl -u euUser:password1 http://localhost:8080/scan
+```
+```shell
+curl -u usUser:password2 http://localhost:8080/scan
+```
+Now, what if business requirement here is the following - since throw KYC scanner is too thorough and slow we want to apply it 
+to everyone in all countries except VIP clients, cause those are too important to wait.
+
+We start by adding a new pivot provider:
+```java
+    @Bean
+    PivotProvider<String> rolloutGroupPivotProvider(){
+        return ()-> Optional.of(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .map(CustomUserDetails.class::cast)
+                .map(CustomUserDetails::getRolloutGroup)
+                .map(FeaturesRolloutGroup::name)
+                .orElseThrow();
+    }
+```
+
+If we try and run the application now the _BeanCreationException_ will be thrown since at this point it is not clear for @Wenflon
+which pivot provider to use for which case. This can be resolved by simply providing pivot bean name inside @Wenflon annotation:
+```java
+@Wenflon(pivotProviderBeanName = "rolloutGroupPivotProvider")
+public interface KYCScanner {}
+```
+```java
+@Wenflon(pivotProviderBeanName = "defaultPivotProvider")
+public interface DecisionEngine {}
+```
+Also need to change conditions values for KYC since there is a new bean:
+```yaml
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
+    newInsuranceRiskEngine: US, default
+    shallowKYCScanner: VIP
+    thoroughKYCScanner: default
+```
+
+Now the app runs without problem and you can check the outcomes:
+... for _**/rank**_ endpoint:
+```shell
+curl -u euUser:password1 http://localhost:8080/rank
+```
+```shell
+curl -u usUser:password2 http://localhost:8080/rank
+```
+```shell
+curl -u usUserVIP:password3 http://localhost:8080/rank
+```
+... and for _**/scan**_ endpoint:
+```shell
+curl -u euUser:password1 http://localhost:8080/scan
+```
+```shell
+curl -u usUser:password2 http://localhost:8080/scan
+```
+```shell
+curl -u usUserVIP:password3 http://localhost:8080/scan
+```
+
+## DETAILS
+### Default Implementation
 Conditions recognize ```default``` keyword which can be used together with other conditions. The ```default```
 will instruct wenflon to use marked implementation in case pivot value is not 
 found in any of given conditions. 
@@ -94,7 +235,7 @@ wenflon:
     newInsuranceRiskEngine: US
 ```
 At the same time only ```1``` default implementations are allowed per wenflon. The example below will
-throw BeanDefinitionValidationException:
+throw _BeanCreationException_:
 
 ```yaml
 wenflon:
@@ -111,3 +252,10 @@ If there is only **one implementation** of an interface annotated with _@Wenflon
 then this implementation is considered as default implementation depending on ```soleConditionalImplAsImplicitDefault``` @Wenflon property value:
 - if ```true``` (_by default_) then this implementation is considered as default implementation, and the condition won't be tested;
 - if ```false``` then this implementation is considered as conditional implementation, and will be used only if the condition is met; otherwise exception will be thrown.
+
+### Multiple Pivot Providers
+If 1 pivot provider is specified, @Wenflon annotated interfaces may not specify the pivot provider bean name.
+Despite the number of @Wenflon annotated interfaces declared if pivot provider bean name is specified but not found among pivot provider beans - the _BeanCreationException_ will be thrown. At the same time there can be more pivot providers in context than declared wenflons. 
+If there is one @Wenflon annotated interface without specifying pivot provider bean name and there are 2+ pivot provider beans then, naturally, 
+the _BeanCreationException_ will be thrown since it is impossible to define which provider to match with. 
+If there is only one pivot provider bean in context and there are only @Wenflon annotations without specifying the provider to use - this pivot provider will be used by default.

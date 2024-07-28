@@ -13,14 +13,16 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
-public class WenflonDynamicProxy<T> {
+class WenflonDynamicProxy<T> {
 
   static final String DEFAULT_KEYWORD = "default";
   private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;
-  public static final String CANNOT_DEFINE_IMPL =
+  public static final String CANNOT_DEFINE_IMPL = // todo move to a separate util class
       "Neither can find conditional implementation, nor can find the default one. Please check wenflon.conditions.* properties, or beans declarations, or 'soleConditionalImplAsImplicitDefault' property on @Wenflon";
+  public static final String NONE = "none";
 
   private final Set<Implementation> declaredImplementations;
 
@@ -33,6 +35,7 @@ public class WenflonDynamicProxy<T> {
 
   @Getter private final T wenflonProxy;
   private final boolean soleConditionalImplAsImplicitDefault;
+  private final String pivotProviderBeanName;
 
   WenflonDynamicProxy(final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
@@ -42,6 +45,8 @@ public class WenflonDynamicProxy<T> {
     this.wenflonProxy = createProxy();
     this.soleConditionalImplAsImplicitDefault =
         representedInterface.getAnnotation(Wenflon.class).soleConditionalImplAsImplicitDefault();
+    this.pivotProviderBeanName =
+        representedInterface.getAnnotation(Wenflon.class).pivotProviderBeanName();
   }
 
   private T createProxy() {
@@ -96,7 +101,8 @@ public class WenflonDynamicProxy<T> {
         declaredImplementations.size() == 1
             && conditionalImplementations.isEmpty()
             && defaultImplementations.isEmpty();
-    final var soleConditionalImplImplicit = soleConditionalImplAsImplicitDefault
+    final var soleConditionalImplImplicit =
+        soleConditionalImplAsImplicitDefault
             && defaultImplementations.isEmpty()
             && conditionalImplementations.size() == 1;
     if (soleImplWithNoConditions) {
@@ -120,8 +126,8 @@ public class WenflonDynamicProxy<T> {
 
   private void validateNumberOfDefaultImpls(final Implementation impl) {
     if (this.defaultImplementations.size() >= MAX_DEFAULT_IMPL_ALLOWED) {
-      throw new BeanDefinitionValidationException(
-          "Too many default default implementations declared. Current maximum per wenflon is %s. %s is declared as %s default implementation for %s"
+      throw new BeanCreationException(
+          "Too many default default implementations declared. Current maximum per wenflon is %s. %s is declared as %s default implementation for %s" // todo move to separate util class
               .formatted(
                   MAX_DEFAULT_IMPL_ALLOWED,
                   impl.getBeanName(),
@@ -139,9 +145,20 @@ public class WenflonDynamicProxy<T> {
         .orElse(false);
   }
 
-  void addPivotProvider(final List<PivotProvider<?>> pivotProviders) {
-    // todo only one - first best - is supported now
-    this.pivotProvider = pivotProviders.stream().findFirst().orElseThrow();
+  void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
+    if (pivotProviders.size() == 1 && pivotProviderBeanName.equals(NONE)) {
+      this.pivotProvider = pivotProviders.get(0);
+      //todo write documentation + examples to cover it
+      return;
+    }
+    this.pivotProvider =
+        pivotProviders.stream()
+            .filter(provider -> provider.getBeanName().equals(pivotProviderBeanName))
+            .findFirst()
+            .orElseThrow(
+                () ->
+                    new BeanCreationException(
+                        "Cannot find pivot provider. Either none was declared. Or pivot provider name used in @Wenflon cannot be match with any bean.")); //todo move text to util
   }
 
   @AllArgsConstructor
