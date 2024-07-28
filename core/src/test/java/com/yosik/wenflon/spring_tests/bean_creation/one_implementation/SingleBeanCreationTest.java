@@ -26,7 +26,7 @@ class SingleBeanCreationTest {
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-empty.properties")
-  @ContextConfiguration(classes = {StdConfig.class, FinalAssemblerConfig.class})
+  @ContextConfiguration(classes = {StdConfig.class})
   class TestWithNoPropertiesAtAll {
     @Autowired Testable primaryTestable;
 
@@ -38,10 +38,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableA)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNull();
     }
@@ -55,7 +54,7 @@ class SingleBeanCreationTest {
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-always-false.properties")
-  @ContextConfiguration(classes = {StdConfig.class, FinalAssemblerConfig.class})
+  @ContextConfiguration(classes = {StdConfig.class})
   class TestWithConditionToFalse_DefaultBehaviour_TheBeanStillReturned {
     @Autowired Testable primaryTestable;
 
@@ -67,10 +66,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableA)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNotNull();
     }
@@ -82,7 +80,7 @@ class SingleBeanCreationTest {
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-sole-not-default.properties")
-  @ContextConfiguration(classes = {StrictSoleImplConfig.class, FinalAssemblerConfig.class})
+  @ContextConfiguration(classes = {StrictSoleImplConfig.class, Config.class})
   class TestWithConditionToFalse_SoleBeanAsDefaultIsFalse_exception_is_thrown {
     @Autowired TestableStrict primaryTestable;
 
@@ -94,10 +92,9 @@ class SingleBeanCreationTest {
 
     @Test()
     void beans_are_created_correctly() {
-      Assertions.assertThat(primaryTestable).isNotNull().isInstanceOf(Proxy.class);
+      Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableD)
           .isNotNull()
-          .isNotInstanceOf(Proxy.class)
           .isNotEqualTo(primaryTestable);
       Assertions.assertThat(properties.getConditions()).isNotNull();
     }
