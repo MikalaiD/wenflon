@@ -32,7 +32,7 @@ We add dependency to the project:
         <dependency>
             <groupId>com.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
-            <version>0.0.6-SNAPSHOT</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 ```
 Then create PivotProvider<String> bean - it will return **pivot** at runtime.

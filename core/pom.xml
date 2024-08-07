@@ -4,14 +4,21 @@
     <parent>
         <groupId>com.github.mikalaid</groupId>
         <artifactId>wenflon</artifactId>
-        <version>0.0.6-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>wenflon-core</artifactId>
+    <name>wenflon core</name>
+    <description>Wenflon - simple properties-based feature switch</description>
     <packaging>jar</packaging>
-
-    <name>core</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/MikalaiD/wenflon</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
