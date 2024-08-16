@@ -1,4 +1,4 @@
-package com.yosik.wenflon;
+package com.github.mikalaid.wenflon.core;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 @AutoConfiguration
 @EnableConfigurationProperties(WenflonProperties.class)
-public class Config {
+class Config {
   @Bean
   @Primary
   FinalAssembler finalAssembler(

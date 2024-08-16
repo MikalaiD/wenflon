@@ -1,4 +1,4 @@
-package com.yosik.wenflon;
+package com.github.mikalaid.wenflon.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

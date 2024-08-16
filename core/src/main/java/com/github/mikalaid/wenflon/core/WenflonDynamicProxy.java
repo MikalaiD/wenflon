@@ -1,6 +1,7 @@
-package com.yosik.wenflon;
+package com.github.mikalaid.wenflon.core;
 
-import com.yosik.wenflon.exceptions.WenflonException;
+import com.github.mikalaid.wenflon.exceptions.WenflonException;
+
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.support.BeanDefinitionValidationException;
 
 class WenflonDynamicProxy<T> {
 
@@ -53,7 +53,7 @@ class WenflonDynamicProxy<T> {
     return representedInterface.cast(
         Proxy.newProxyInstance(
             WenflonDynamicProxy.class.getClassLoader(),
-            new Class<?>[] {representedInterface, com.yosik.wenflon.Proxy.class},
+            new Class<?>[] {representedInterface, com.github.mikalaid.wenflon.core.Proxy.class},
             (proxy, method, args) -> method.invoke(defineImplementation(), args)));
   }
 

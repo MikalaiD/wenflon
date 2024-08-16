@@ -1,4 +1,4 @@
-package com.yosik.wenflon.exceptions;
+package com.github.mikalaid.wenflon.exceptions;
 
 public class WenflonException extends RuntimeException{
 
