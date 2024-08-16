@@ -20,7 +20,7 @@ import org.springframework.lang.NonNull;
 
 @RequiredArgsConstructor
 @Slf4j
-public class WenflonBeanPostProcessor
+class WenflonBeanPostProcessor
     implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();

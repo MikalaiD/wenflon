@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "wenflon")
 @Getter
 @Setter
-public class WenflonProperties {
+class WenflonProperties {
   private Map<String, List<String>> conditions;
 }
 

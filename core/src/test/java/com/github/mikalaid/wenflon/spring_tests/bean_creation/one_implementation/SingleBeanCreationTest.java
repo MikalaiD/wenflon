@@ -3,7 +3,6 @@ package com.github.mikalaid.wenflon.spring_tests.bean_creation.one_implementatio
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.mikalaid.wenflon.Config;
-import com.github.mikalaid.wenflon.WenflonProperties;
 import com.github.mikalaid.wenflon.exceptions.WenflonException;
 import com.github.mikalaid.wenflon.spring_tests._common.ServiceA;
 import com.github.mikalaid.wenflon.spring_tests._common.Testable;
@@ -14,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@EnableConfigurationProperties(WenflonProperties.class)
+@ComponentScan("com.github.mikalaid.wenflon")
 class SingleBeanCreationTest {
 
 
@@ -35,7 +34,6 @@ class SingleBeanCreationTest {
     @Qualifier("testableA")
     Testable testableA;
 
-    @Autowired WenflonProperties properties;
 
     @Test()
     void beans_are_created_correctly() {
@@ -43,7 +41,6 @@ class SingleBeanCreationTest {
       Assertions.assertThat(testableA)
           .isNotNull()
           .isNotEqualTo(primaryTestable);
-      Assertions.assertThat(properties.getConditions()).isNull();
     }
 
     @Test
@@ -63,15 +60,12 @@ class SingleBeanCreationTest {
     @Qualifier("testableA")
     Testable testableA;
 
-    @Autowired WenflonProperties properties;
-
     @Test()
     void beans_are_created_correctly() {
       Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableA)
           .isNotNull()
           .isNotEqualTo(primaryTestable);
-      Assertions.assertThat(properties.getConditions()).isNotNull();
     }
     @Test
     void basic_call_works_sole_conditional_impl_is_chosen_as_default() {
@@ -89,15 +83,12 @@ class SingleBeanCreationTest {
     @Qualifier("testableD")
     TestableStrict testableD;
 
-    @Autowired WenflonProperties properties;
-
     @Test()
     void beans_are_created_correctly() {
       Assertions.assertThat(primaryTestable).isNotNull();
       Assertions.assertThat(testableD)
           .isNotNull()
           .isNotEqualTo(primaryTestable);
-      Assertions.assertThat(properties.getConditions()).isNotNull();
     }
     @Test
     void basic_call_throws_exception_since_there_is_strict_validation() {

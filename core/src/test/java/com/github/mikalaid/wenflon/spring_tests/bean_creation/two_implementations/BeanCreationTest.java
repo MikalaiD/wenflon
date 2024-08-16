@@ -1,6 +1,6 @@
 package com.github.mikalaid.wenflon.spring_tests.bean_creation.two_implementations;
 
-import com.github.mikalaid.wenflon.WenflonProperties;
+
 import com.github.mikalaid.wenflon.spring_tests._common.ClassAsWenflon;
 import com.github.mikalaid.wenflon.spring_tests._common.Testable;
 import org.assertj.core.api.Assertions;
@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@EnableConfigurationProperties(WenflonProperties.class)
+@ComponentScan("com.github.mikalaid.wenflon")
 @ContextConfiguration(classes = {TestConfig.class})
 @TestPropertySource("classpath:bean_creation_two_implementations/application-test.properties")
 class BeanCreationTest {
@@ -29,7 +29,6 @@ class BeanCreationTest {
   @Qualifier("testableB")
   Testable testableB;
 
-  @Autowired WenflonProperties properties;
 
   @Autowired ClassAsWenflon classAsWenflon;
 
@@ -43,8 +42,6 @@ class BeanCreationTest {
     Assertions.assertThat(testableB)
         .isNotNull()
         .isNotEqualTo(primaryTestable);
-    Assertions.assertThat(properties.getConditions()).isNotNull();
-    Assertions.assertThat(properties.getConditions().entrySet()).hasSize(2);
     Assertions.assertThat(classAsWenflon).isNotNull();
   }
 }

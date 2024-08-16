@@ -4,7 +4,6 @@ import static org.mockito.Mockito.when;
 
 import com.github.mikalaid.wenflon.Config;
 import com.github.mikalaid.wenflon.PivotProvider;
-import com.github.mikalaid.wenflon.WenflonProperties;
 import com.github.mikalaid.wenflon.spring_tests._common.ServiceA;
 import com.github.mikalaid.wenflon.spring_tests._common.ServiceB;
 import com.github.mikalaid.wenflon.spring_tests._common.ServiceC;
@@ -16,14 +15,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@EnableConfigurationProperties(WenflonProperties.class)
+@ComponentScan("com.github.mikalaid.wenflon")
 @ContextConfiguration(classes = {TestConfig.class, Config.class})
 @TestPropertySource("classpath:conditions/application-test_happypath.properties")
 class ConditionsTest {

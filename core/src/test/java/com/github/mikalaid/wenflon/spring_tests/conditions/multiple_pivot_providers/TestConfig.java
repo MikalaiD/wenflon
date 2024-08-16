@@ -17,10 +17,6 @@ import org.springframework.context.annotation.Import;
 @Import(Config.class)
 public class TestConfig {
 
-  //    @Bean
-  //    Testable testableA() {
-  //        return new ServiceA();
-  //    }
   @Bean
   TestableWithProviderX testableE() {
     return new ServiceE();
