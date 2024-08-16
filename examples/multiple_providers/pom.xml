@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+<<<<<<< HEAD
         <groupId>com.yosik</groupId>
         <artifactId>wenflon-examples</artifactId>
         <version>0.0.6-SNAPSHOT</version>
+=======
+        <groupId>com.github.mikalaid</groupId>
+        <artifactId>wenflon-examples</artifactId>
+        <version>0.0.1</version>
+>>>>>>> develop
     </parent>
 
     <artifactId>multiple_providers</artifactId>
@@ -16,6 +22,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+<<<<<<< HEAD
     <dependencies>
         <dependency>
             <groupId>com.yosik</groupId>
@@ -24,5 +31,7 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+=======
+>>>>>>> develop
 
 </project>

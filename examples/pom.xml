@@ -4,11 +4,19 @@
     <parent>
         <groupId>com.github.mikalaid</groupId>
         <artifactId>wenflon</artifactId>
+<<<<<<< HEAD
         <version>0.0.6-SNAPSHOT</version>
+=======
+        <version>0.0.1</version>
+>>>>>>> develop
     </parent>
 
-    <groupId>com.yosik</groupId>
+    <groupId>com.github.mikalaid</groupId>
     <artifactId>wenflon-examples</artifactId>
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     <packaging>pom</packaging>
 
     <name>examples</name>
@@ -28,7 +36,11 @@
         <dependency>
             <groupId>com.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
+<<<<<<< HEAD
             <version>0.0.6-SNAPSHOT</version>
+=======
+            <version>0.0.1</version>
+>>>>>>> develop
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
