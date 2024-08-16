@@ -3,7 +3,7 @@ package com.github.mikalaid.examples.multiple_providers.config;
 import com.github.mikalaid.examples.multiple_providers.config.user.FeaturesRolloutGroup;
 import com.github.mikalaid.examples.multiple_providers.config.user.Market;
 import com.github.mikalaid.examples.multiple_providers.config.user.CustomUserDetails;
-import com.github.mikalaid.wenflon.PivotProvider;
+import com.github.mikalaid.wenflon.core.PivotProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;

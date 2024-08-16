@@ -2,7 +2,7 @@ package com.github.mikalaid.examples.basic.config;
 
 import com.github.mikalaid.examples.basic.config.user.CustomUserDetails;
 import com.github.mikalaid.examples.basic.config.user.Market;
-import com.github.mikalaid.wenflon.PivotProvider;
+import com.github.mikalaid.wenflon.core.PivotProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
