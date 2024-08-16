@@ -1,7 +1,7 @@
-<<<<<<<< HEAD:examples/basic/src/main/java/com/yosik/examples/basic/adapters/RankingController.java
-package com.yosik.examples.basic.adapters;
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/adapters/RankingController.java
+package com.yosik.examples.multiple_providers.adapters;
 
-import com.yosik.examples.basic.ports.DecisionEngine;
+import com.yosik.examples.multiple_providers.ports.DecisionEngine;
 ========
 package com.github.mikalaid.examples.basic.adapters;
 

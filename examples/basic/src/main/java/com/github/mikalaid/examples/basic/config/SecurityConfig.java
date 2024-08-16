@@ -1,7 +1,7 @@
-<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/config/SecurityConfig.java
-package com.yosik.examples.multiple_providers.config;
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/github/mikalaid/examples/multiple_providers/config/SecurityConfig.java
+package com.github.mikalaid.examples.multiple_providers.config;
 
-import com.yosik.examples.multiple_providers.services.CustomUserDetailsService;
+import com.github.mikalaid.examples.multiple_providers.services.CustomUserDetailsService;
 ========
 package com.github.mikalaid.examples.basic.config;
 

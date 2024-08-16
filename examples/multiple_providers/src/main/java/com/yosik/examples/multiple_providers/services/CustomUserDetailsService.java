@@ -1,9 +1,19 @@
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/services/CustomUserDetailsService.java
 package com.yosik.examples.multiple_providers.services;
+========
+package com.github.mikalaid.examples.basic.services;
+>>>>>>>> develop:examples/basic/src/main/java/com/github/mikalaid/examples/basic/services/CustomUserDetailsService.java
 
 
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/services/CustomUserDetailsService.java
 import com.yosik.examples.multiple_providers.config.user.CustomUserDetails;
 import com.yosik.examples.multiple_providers.config.user.FeaturesRolloutGroup;
 import com.yosik.examples.multiple_providers.config.user.Market;
+========
+import com.github.mikalaid.examples.basic.config.user.CustomUserDetails;
+import com.github.mikalaid.examples.basic.config.user.FeaturesRolloutGroup;
+import com.github.mikalaid.examples.basic.config.user.Market;
+>>>>>>>> develop:examples/basic/src/main/java/com/github/mikalaid/examples/basic/services/CustomUserDetailsService.java
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

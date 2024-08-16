@@ -1,5 +1,5 @@
-<<<<<<<< HEAD:examples/basic/src/main/java/com/yosik/examples/basic/App.java
-package com.yosik.examples.basic;
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/App.java
+package com.yosik.examples.multiple_providers;
 ========
 package com.github.mikalaid.examples.basic;
 >>>>>>>> develop:examples/basic/src/main/java/com/github/mikalaid/examples/basic/App.java

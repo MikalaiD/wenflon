@@ -1,5 +1,5 @@
-<<<<<<<< HEAD:examples/basic/src/main/java/com/yosik/examples/basic/config/user/FeaturesRolloutGroup.java
-package com.yosik.examples.basic.config.user;
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/yosik/examples/multiple_providers/config/user/FeaturesRolloutGroup.java
+package com.yosik.examples.multiple_providers.config.user;
 ========
 package com.github.mikalaid.examples.basic.config.user;
 >>>>>>>> develop:examples/basic/src/main/java/com/github/mikalaid/examples/basic/config/user/FeaturesRolloutGroup.java

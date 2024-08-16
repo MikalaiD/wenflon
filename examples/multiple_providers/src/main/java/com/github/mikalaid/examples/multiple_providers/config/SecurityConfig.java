@@ -1,6 +1,14 @@
+<<<<<<<< HEAD:examples/multiple_providers/src/main/java/com/github/mikalaid/examples/multiple_providers/config/SecurityConfig.java
 package com.github.mikalaid.examples.multiple_providers.config;
 
 import com.github.mikalaid.examples.multiple_providers.services.CustomUserDetailsService;
+========
+package com.github.mikalaid.examples.basic.config;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import com.github.mikalaid.examples.basic.services.CustomUserDetailsService;
+>>>>>>>> develop:examples/basic/src/main/java/com/github/mikalaid/examples/basic/config/SecurityConfig.java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

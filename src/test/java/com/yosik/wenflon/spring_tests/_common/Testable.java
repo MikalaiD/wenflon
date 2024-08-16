@@ -1,6 +1,6 @@
-package com.yosik.wenflon.spring_tests._common;
+package com.github.mikalaid.wenflon.test._common;
 
-import com.yosik.wenflon.Wenflon;
+import com.github.mikalaid.wenflon.core.Wenflon;
 
 @Wenflon
 public interface Testable {
