@@ -4,21 +4,13 @@
     <parent>
         <groupId>com.github.mikalaid</groupId>
         <artifactId>wenflon</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>wenflon-core</artifactId>
-    <name>wenflon core</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Wenflon - simple properties-based feature switch</description>
     <packaging>jar</packaging>
-    <url>https://github.com/MikalaiD/wenflon</url>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,6 +50,11 @@
             <artifactId>jakarta.annotation-api</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.6</version>
+        </dependency>
 
         <!--    TEST DEPENDENCIES-->
         <dependency>
@@ -90,10 +87,29 @@
             <version>3.2.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.5.6</version>
-        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
