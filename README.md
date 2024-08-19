@@ -30,7 +30,7 @@ keep using _StrInsuranceRiskEngine_ and users from US will be facing new functio
 We add dependency to the project:
 ```xml
         <dependency>
-            <groupId>com.github.mikalaid</groupId>
+            <groupId>io.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
             <version>0.0.1</version>
         </dependency>
