@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.github.mikalaid</groupId>
+        <groupId>io.github.mikalaid</groupId>
         <artifactId>wenflon</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <groupId>com.github.mikalaid</groupId>
+    <groupId>io.github.mikalaid</groupId>
     <artifactId>wenflon-examples</artifactId>
 
     <packaging>pom</packaging>
@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.mikalaid</groupId>
+            <groupId>io.github.mikalaid</groupId>
             <artifactId>wenflon-core</artifactId>
             <version>0.0.1</version>
         </dependency>
@@ -53,4 +53,15 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
