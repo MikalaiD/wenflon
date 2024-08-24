@@ -148,7 +148,6 @@ class WenflonDynamicProxy<T> {
   void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
     if (pivotProviders.size() == 1 && pivotProviderBeanName.equals(NONE)) {
       this.pivotProvider = pivotProviders.get(0);
-      //todo write documentation + examples to cover it
       return;
     }
     this.pivotProvider =
