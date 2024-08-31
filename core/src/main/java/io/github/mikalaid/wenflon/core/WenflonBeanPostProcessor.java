@@ -85,8 +85,7 @@ class WenflonBeanPostProcessor
   @Override
   public Object postProcessBeforeInitialization(
       @NonNull final Object bean, @NonNull final String beanName) throws BeansException {
-    //todo here we can just strip off @Primary from the wenflon eligible beans
-    // here we assume class will implement only one interface under wenflon
+    //todo here we assume class will implement only one interface under wenflon
     if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
       putBehindAppropriateWenflons(bean, beanName);
     }
