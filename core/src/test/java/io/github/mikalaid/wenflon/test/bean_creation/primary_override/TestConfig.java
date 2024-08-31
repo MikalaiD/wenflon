@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.bean_creation.primary_override.two_implementations;
+package io.github.mikalaid.wenflon.test.bean_creation.primary_override;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.ClassAsWenflon;

@@ -20,8 +20,8 @@ import org.springframework.lang.NonNull;
 
 @RequiredArgsConstructor
 @Slf4j
-class WenflonBeanPostProcessor
-    implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
+// todo try to refactor class into more
+class WenflonBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor {
 
   private final WenflonRegistry wenflonRegistry = new WenflonRegistry();
   private final Map<Class<?>, Set<String>> wenflonInterfacesToBeanNames = new HashMap<>();
@@ -30,17 +30,25 @@ class WenflonBeanPostProcessor
   @Override
   public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
       throws BeansException {
-    identifyWenflonAnnotatedInterfaces(registry); //todo split into 2 classes?
+    identifyWenflonAnnotatedInterfaces(registry);
+    stripOfPrimaryFromWenflonEligibleBeanDefinitions(registry);
     identifyPivotProviders(registry);
     registerWenflonDynamicProxyForEachWenflonAnnotatedInterface(registry);
     registerPivotProviders(registry);
   }
 
+  private void stripOfPrimaryFromWenflonEligibleBeanDefinitions(
+      final BeanDefinitionRegistry registry) {
+    this.wenflonInterfacesToBeanNames.values().stream()
+        .flatMap(Set::stream)
+        .collect(Collectors.toSet())
+        .forEach(name -> registry.getBeanDefinition(name).setPrimary(false));
+  }
 
   private void identifyPivotProviders(final BeanDefinitionRegistry registry) {
     Arrays.stream(registry.getBeanDefinitionNames())
-            .filter(isPivotProvider(registry))
-            .forEach(pivotProviderBeanNames::add);
+        .filter(isPivotProvider(registry))
+        .forEach(pivotProviderBeanNames::add);
   }
 
   private static Predicate<String> isPivotProvider(final BeanDefinitionRegistry registry) {
@@ -52,7 +60,7 @@ class WenflonBeanPostProcessor
 
   private void identifyWenflonAnnotatedInterfaces(final BeanDefinitionRegistry registry) {
     wenflonInterfacesToBeanNames.putAll(
-        Arrays.stream(registry.getBeanDefinitionNames())//todo maybe beandefinitionmap is better and can simplify a LOT of code
+        Arrays.stream(registry.getBeanDefinitionNames())
             .flatMap(name -> toEntries(registry, name).stream())
             .collect(
                 Collectors.toMap(
@@ -68,7 +76,7 @@ class WenflonBeanPostProcessor
         .filter(WenflonBeanPostProcessor::filterAndLogInappropriateObjects)
         .forEach(
             interfaceAnnotatedWithWenflon ->
-                registerWenflonDynamicProxyAsPrimaryBean(registry, interfaceAnnotatedWithWenflon));
+                registerWenflonBeans(registry, interfaceAnnotatedWithWenflon));
   }
 
   private static boolean filterAndLogInappropriateObjects(
@@ -85,7 +93,7 @@ class WenflonBeanPostProcessor
   @Override
   public Object postProcessBeforeInitialization(
       @NonNull final Object bean, @NonNull final String beanName) throws BeansException {
-    //todo here we assume class will implement only one interface under wenflon
+    // todo here we assume class will implement only one interface under wenflon
     if (!(bean instanceof Proxy) && implementsInterfaceAnnotatedWithWenflon(beanName)) {
       putBehindAppropriateWenflons(bean, beanName);
     }
@@ -113,32 +121,42 @@ class WenflonBeanPostProcessor
     return bean;
   }
 
-  private void registerWenflonDynamicProxyAsPrimaryBean(
+  private void registerWenflonBeans(
       final BeanDefinitionRegistry registry, final Map.Entry<Class<?>, Set<String>> wenflonCase) {
     final var aClass = wenflonCase.getKey();
+    final var proxyManager = wenflonRegistry.createAndRegisterProxyManager(aClass);
+    registerDynamicProxyManager(registry, proxyManager);
+    registerDynamicProxyAsPrimaryBean(registry, wenflonCase, aClass, proxyManager);
+  }
+
+  private static void registerDynamicProxyManager(
+      final BeanDefinitionRegistry registry, final DynamicProxyManager<?> proxyManager) {
+    final var wenflonBeanDefinition = new GenericBeanDefinition();
+    wenflonBeanDefinition.setBeanClass(DynamicProxyManager.class);
+    wenflonBeanDefinition.setInstanceSupplier(() -> proxyManager);
+    registry.registerBeanDefinition(proxyManager.getName(), wenflonBeanDefinition);
+  }
+
+  private static void registerDynamicProxyAsPrimaryBean(
+      final BeanDefinitionRegistry registry,
+      final Map.Entry<Class<?>, Set<String>> wenflonCase,
+      final Class<?> aClass,
+      final DynamicProxyManager<?> proxyManager) {
     final var userDefinedBeanDefinitionsNames = wenflonCase.getValue().toArray(new String[] {});
-    WenflonDynamicProxy<?> wenflon = wenflonRegistry.createAndRegisterWenflonProxy(aClass);
-    GenericBeanDefinition wProxyBeanDefinition = new GenericBeanDefinition();
+    final var wProxyBeanDefinition = new GenericBeanDefinition();
     wProxyBeanDefinition.setBeanClass(aClass);
     wProxyBeanDefinition.setDependsOn(userDefinedBeanDefinitionsNames);
     wProxyBeanDefinition.setPrimary(true);
-    wProxyBeanDefinition.setInstanceSupplier(() -> aClass.cast(wenflon.getWenflonProxy()));
-    registry.registerBeanDefinition(wenflon.getProxyName(), wProxyBeanDefinition);
-    // should also register a wenflon as a bean so it is then injected into final assembler
-    GenericBeanDefinition wenflonBeanDefinition = new GenericBeanDefinition();
-    wenflonBeanDefinition.setBeanClass(WenflonDynamicProxy.class);
-    wenflonBeanDefinition.setInstanceSupplier(() -> wenflon);
-    registry.registerBeanDefinition(wenflon.getName(), wenflonBeanDefinition);
+    wProxyBeanDefinition.setInstanceSupplier(() -> aClass.cast(proxyManager.getDynamicProxy()));
+    registry.registerBeanDefinition(proxyManager.getProxyName(), wProxyBeanDefinition);
   }
 
   private void registerPivotProviders(final BeanDefinitionRegistry registry) {
-    pivotProviderBeanNames.forEach(
-            name-> registerPivotProviderCaseBean(name, registry)
-    );
-
+    pivotProviderBeanNames.forEach(name -> registerPivotProviderCaseBean(name, registry));
   }
 
-  private void registerPivotProviderCaseBean(final String name, final BeanDefinitionRegistry registry) {
+  private void registerPivotProviderCaseBean(
+      final String name, final BeanDefinitionRegistry registry) {
     GenericBeanDefinition pivotProviderBeanDefinition = new GenericBeanDefinition();
     pivotProviderBeanDefinition.setBeanClass(PivotProviderWrapper.class);
     pivotProviderBeanDefinition.setDependsOn(name);
@@ -148,7 +166,6 @@ class WenflonBeanPostProcessor
     pivotProviderBeanDefinition.setConstructorArgumentValues(args);
     registry.registerBeanDefinition(String.format("p-%s", name), pivotProviderBeanDefinition);
   }
-
 
   private static List<Map.Entry<String, Class<?>>> toEntries(
       final BeanDefinitionRegistry registry, final String name) {
@@ -171,8 +188,7 @@ class WenflonBeanPostProcessor
       return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
     }
     if (beanDefinition.getSource() instanceof MethodMetadata methodMetadata) {
-      return Optional.of(
-          Class.forName(methodMetadata.getReturnTypeName()));
+      return Optional.of(Class.forName(methodMetadata.getReturnTypeName()));
     }
     if (beanDefinition.getSource() instanceof Class<?> source) {
       return Optional.of(Class.forName(source.getName()));

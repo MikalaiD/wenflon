@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.beans.factory.BeanCreationException;
 
-class WenflonDynamicProxy<T> {
+class DynamicProxyManager<T> {
 
   static final String DEFAULT_KEYWORD = "default";
   private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;
@@ -33,16 +33,16 @@ class WenflonDynamicProxy<T> {
   @Getter private final Class<T> representedInterface;
   private PivotProvider<?> pivotProvider;
 
-  @Getter private final T wenflonProxy;
+  @Getter private final T dynamicProxy;
   private final boolean soleConditionalImplAsImplicitDefault;
   private final String pivotProviderBeanName;
 
-  WenflonDynamicProxy(final Class<T> representedInterface) {
+  DynamicProxyManager(final Class<T> representedInterface) {
     this.representedInterface = representedInterface;
     this.declaredImplementations = new HashSet<>();
     this.conditionalImplementations = new HashMap<>();
     this.defaultImplementations = new HashSet<>();
-    this.wenflonProxy = createProxy();
+    this.dynamicProxy = createProxy();
     this.soleConditionalImplAsImplicitDefault =
         representedInterface.getAnnotation(Wenflon.class).soleConditionalImplAsImplicitDefault();
     this.pivotProviderBeanName =
@@ -52,12 +52,12 @@ class WenflonDynamicProxy<T> {
   private T createProxy() {
     return representedInterface.cast(
         Proxy.newProxyInstance(
-            WenflonDynamicProxy.class.getClassLoader(),
+            DynamicProxyManager.class.getClassLoader(),
             new Class<?>[] {representedInterface, io.github.mikalaid.wenflon.core.Proxy.class},
             (proxy, method, args) -> method.invoke(defineImplementation(), args)));
   }
 
-  WenflonDynamicProxy<T> addImplementation(final Object bean, final String beanName) {
+  DynamicProxyManager<T> addImplementation(final Object bean, final String beanName) {
     final var implementation = new Implementation(bean, beanName);
     declaredImplementations.add(implementation);
     return this;
