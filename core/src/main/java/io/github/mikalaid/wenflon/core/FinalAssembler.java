@@ -10,7 +10,7 @@ import org.springframework.context.event.EventListener;
 @Slf4j
 class FinalAssembler {
 
-  private final List<WenflonDynamicProxy<?>> wenflons;
+  private final List<DynamicProxyManager<?>> wenflons;
   private final WenflonProperties properties;
   private final List<PivotProviderWrapper<?>> pivotProviders;
   private boolean allBeansInitialized = false;
@@ -23,7 +23,7 @@ class FinalAssembler {
     allBeansInitialized=true;
     log.info("All beans have been initialized. Starting assembling - adding conditions and pivot providers");
     wenflons.forEach(wenflon -> wenflon.addConditions(properties));
-    wenflons.forEach(WenflonDynamicProxy::trySetImplicitDefault);
+    wenflons.forEach(DynamicProxyManager::trySetImplicitDefault);
     wenflons.forEach(wenflon -> wenflon.addPivotProvider(pivotProviders));
   }
 }

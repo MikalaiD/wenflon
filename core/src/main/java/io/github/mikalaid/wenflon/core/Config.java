@@ -15,7 +15,7 @@ class Config {
   @Bean
   @Primary
   FinalAssembler finalAssembler(
-      final List<WenflonDynamicProxy<?>> wenflonDynamicProxies,
+      final List<DynamicProxyManager<?>> wenflonDynamicProxies,
       final WenflonProperties properties,
       final List<PivotProviderWrapper<?>> pivotProviders) {
     return new FinalAssembler(wenflonDynamicProxies, properties, pivotProviders);

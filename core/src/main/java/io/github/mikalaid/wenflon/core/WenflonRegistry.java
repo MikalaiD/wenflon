@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class WenflonRegistry {
 
-  private final Map<Class<?>, WenflonDynamicProxy<?>> registry = new ConcurrentHashMap<>();
+  private final Map<Class<?>, DynamicProxyManager<?>> registry = new ConcurrentHashMap<>();
 
   void putBehindWenflon(
       final Class<?> anInterface, final Object bean, final String beanName) {
@@ -13,8 +13,8 @@ class WenflonRegistry {
         anInterface, (k, v) -> v.addImplementation(bean, beanName));
   }
 
-  <T> WenflonDynamicProxy<T> createAndRegisterWenflonProxy(final Class<T> aClass) {
-    final var wenflon = new WenflonDynamicProxy<>(aClass);
+  <T> DynamicProxyManager<T> createAndRegisterProxyManager(final Class<T> aClass) {
+    final var wenflon = new DynamicProxyManager<>(aClass);
     registry.put(aClass, wenflon);
     return wenflon;
   }
