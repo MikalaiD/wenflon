@@ -259,3 +259,5 @@ Despite the number of @Wenflon annotated interfaces declared if pivot provider b
 If there is one @Wenflon annotated interface without specifying pivot provider bean name and there are 2+ pivot provider beans then, naturally, 
 the _BeanCreationException_ will be thrown since it is impossible to define which provider to match with. 
 If there is only one pivot provider bean in context and there are only @Wenflon annotations without specifying the provider to use - this pivot provider will be used by default.
+
+### Primary Beans
