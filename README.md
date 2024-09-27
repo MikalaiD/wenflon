@@ -212,6 +212,9 @@ curl -u usUserVIP:password3 http://localhost:8080/scan
 ```
 
 ## DETAILS
+### Supported bean scopes
+Singleton, Prototype
+
 ### Default Implementation
 Conditions recognize ```default``` keyword which can be used together with other conditions. The ```default```
 will instruct wenflon to use marked implementation in case pivot value is not 
