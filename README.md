@@ -212,6 +212,9 @@ curl -u usUserVIP:password3 http://localhost:8080/scan
 ```
 
 ## DETAILS
+### Supported bean scopes
+Singleton, Prototype
+
 ### Default Implementation
 Conditions recognize ```default``` keyword which can be used together with other conditions. The ```default```
 will instruct wenflon to use marked implementation in case pivot value is not 
@@ -259,3 +262,8 @@ Despite the number of @Wenflon annotated interfaces declared if pivot provider b
 If there is one @Wenflon annotated interface without specifying pivot provider bean name and there are 2+ pivot provider beans then, naturally, 
 the _BeanCreationException_ will be thrown since it is impossible to define which provider to match with. 
 If there is only one pivot provider bean in context and there are only @Wenflon annotations without specifying the provider to use - this pivot provider will be used by default.
+
+### Primary Beans
+If there is an interface annotated with @Wenflon as well as an implementation bean of this interface annotated as a @Primary bean then this @Primary annotation
+will be ignored. Wenflon hides all the implementations behind the dynamic proxy and inject the latter as a @Primary bean. Consequently, to have no conflicts with
+multiple primary beans the beans behind wenflon are stripped of the @Primary.
