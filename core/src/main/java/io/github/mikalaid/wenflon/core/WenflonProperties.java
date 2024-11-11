@@ -1,5 +1,6 @@
 package io.github.mikalaid.wenflon.core;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,12 +12,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "wenflon")
 @Getter
-
 class WenflonProperties {
-  @Setter
-  private Map<String, List<String>> conditions;
-
-  private Map<String, Map<MatchType, Map<String, Condition>>> complexConditions;
+  @Setter private Map<String, List<String>> conditions = new HashMap<>();
+  private Map<String, Map<MatchType, Map<String, Condition>>> complexConditions = new HashMap<>();
 
   public void setComplexConditions(final Map<String, Map<MatchType, Map<String, Condition>>> complexConditions) {
     complexConditions

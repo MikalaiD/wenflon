@@ -22,7 +22,7 @@ class FinalAssembler {
     }
     allBeansInitialized=true;
     log.info("All beans have been initialized. Starting assembling - adding conditions and pivot providers");
-    wenflons.forEach(wenflon -> wenflon.addConditions(properties));
+    wenflons.forEach(wenflon -> wenflon.addConditions(properties)); //todo move to one method in wenflon
     wenflons.forEach(DynamicProxyManager::trySetImplicitDefault);
     wenflons.forEach(wenflon -> wenflon.addPivotProvider(pivotProviders));
   }

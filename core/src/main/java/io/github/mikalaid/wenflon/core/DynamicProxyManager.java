@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -93,7 +95,7 @@ class DynamicProxyManager<T> {
   void addConditions(final WenflonProperties properties) {
     declaredImplementations.stream()
         .filter(impl -> conditionRepresentedInProperties(properties, impl))
-        .forEach(impl -> addCondition(properties, impl));
+        .forEach(impl -> addConditions(properties, impl));
   }
 
   void trySetImplicitDefault() {
@@ -112,7 +114,13 @@ class DynamicProxyManager<T> {
     }
   }
 
-  private void addCondition(final WenflonProperties properties, final Implementation impl) {
+  private void addConditions(final WenflonProperties properties, final Implementation impl) {
+    addSimpleCondition(properties, impl);
+    //todo xor
+//    addComplexCondition(properties, impl); FINISHED HERE
+  }
+
+  private void addSimpleCondition(final WenflonProperties properties, final Implementation impl) {
     final var isDefaultImpl =
         properties.getConditions().get(impl.getBeanName()).contains(DEFAULT_KEYWORD);
     if (isDefaultImpl) {
@@ -120,7 +128,7 @@ class DynamicProxyManager<T> {
       this.defaultImplementations.add(impl);
     } else {
       conditionalImplementations.put(
-          impl, s -> properties.getConditions().get(impl.getBeanName()).contains(s));
+              impl, s -> properties.getConditions().get(impl.getBeanName()).contains(s));
     }
   }
 
@@ -138,11 +146,8 @@ class DynamicProxyManager<T> {
 
   private static Boolean conditionRepresentedInProperties(
       final WenflonProperties properties, final Implementation impl) {
-    return Optional.ofNullable(properties.getConditions())
-        .map(
-            conditions ->
-                conditions.keySet().stream().anyMatch(name -> name.equals(impl.getBeanName())))
-        .orElse(false);
+    return Stream.concat(properties.getConditions().keySet().stream(), properties.getComplexConditions().keySet().stream())
+            .anyMatch(name -> name.equals(impl.getBeanName()));
   }
 
   void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
