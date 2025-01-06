@@ -27,5 +27,5 @@ public @interface Wenflon {
      * To be used in scenarios where there are 2+ {@link PivotProvider } implementations.
      * @return
      */
-    String pivotProviderBeanName() default "none";
+    String[] pivotProviderBeanNames() default {};
 }
