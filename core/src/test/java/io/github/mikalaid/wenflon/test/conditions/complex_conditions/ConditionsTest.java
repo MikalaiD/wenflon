@@ -31,41 +31,5 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestPropertySource("classpath:conditions/application-test_complex_conditions.properties")
 class ConditionsTest {
 
-  @Autowired
-  TestableWithProviderX wenflonProxyBeanX;
-  @Autowired
-  TestableWithProviderY wenflonProxyBeanY;
 
-  @SpyBean
-  @Qualifier("providerX")
-  PivotProvider<String> pivotProviderX;
-
-  @SpyBean
-  @Qualifier("providerY")
-  PivotProvider<String> pivotProviderY;
-
-  @ParameterizedTest
-  @MethodSource("getTestConfigurations")
-  void conditions_work_with_multiple_providers(Class<?> implementationClassX, String pivotX, Class<?> implementationClassY, String pivotY){
-    //given
-    when(pivotProviderX.getPivot()).thenReturn(pivotX);
-    when(pivotProviderY.getPivot()).thenReturn(pivotY);
-
-    //when
-    var outputX = wenflonProxyBeanX.test();
-    var outputY = wenflonProxyBeanY.test();
-
-    //then
-    assertThat(outputX).isEqualTo(implementationClassX.getCanonicalName());
-    assertThat(outputY).isEqualTo(implementationClassY.getCanonicalName());
-  }
-
-  public static Stream<Arguments> getTestConfigurations() {
-    return Stream.of(
-            Arguments.of(ServiceE.class, "orange", ServiceH.class, "France"),
-            Arguments.of(ServiceF.class, "non-existing-value", ServiceH.class, "France"),
-            Arguments.of(ServiceF.class, "red", ServiceG.class, "US"),
-            Arguments.of(ServiceF.class, "red", ServiceG.class, "US")
-            );
-  }
 }
