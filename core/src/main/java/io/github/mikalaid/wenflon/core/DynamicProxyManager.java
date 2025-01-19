@@ -196,7 +196,7 @@ class DynamicProxyManager<T> {
 
   void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
     if (pivotProviders.size() == 1 && pivotProviderBeanNames.length==0) {
-      pivotProviders.add(pivotProviders.get(0));
+      this.pivotProviders.add(pivotProviders.get(0));
       return;
     }
     final var pivotProvidersToAdd = pivotProviders.stream()
