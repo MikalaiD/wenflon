@@ -1,13 +1,8 @@
 package io.github.mikalaid.wenflon.test.conditions.complex_conditions;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
-import io.github.mikalaid.wenflon.test._common.ServiceE;
-import io.github.mikalaid.wenflon.test._common.ServiceF;
-import io.github.mikalaid.wenflon.test._common.ServiceG;
-import io.github.mikalaid.wenflon.test._common.ServiceH;
-import io.github.mikalaid.wenflon.test._common.StubPivotProvider;
-import io.github.mikalaid.wenflon.test._common.TestableWithProviderX;
-import io.github.mikalaid.wenflon.test._common.TestableWithProviderY;
+import io.github.mikalaid.wenflon.test._common.StubIntPivotProvider;
+import io.github.mikalaid.wenflon.test._common.StubStringPivotProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +12,21 @@ import org.springframework.context.annotation.Configuration;
 public class TestConfig {
 
   @Bean
-  TestableWithProviderX testableI() {
-    return new ServiceE();
+  Testable testableA() {
+    return new ServiceA();
+  }
+  @Bean
+  Testable testableB() {
+    return new ServiceB();
+  }
+
+  @Bean
+  PivotProvider<String> providerAlpha() {
+    return new StubStringPivotProvider();
+  }
+
+  @Bean
+  PivotProvider<Integer> providerBeta() {
+    return new StubIntPivotProvider();
   }
 }

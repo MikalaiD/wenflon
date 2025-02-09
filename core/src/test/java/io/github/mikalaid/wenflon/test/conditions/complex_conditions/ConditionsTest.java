@@ -4,15 +4,9 @@ package io.github.mikalaid.wenflon.test.conditions.complex_conditions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import io.github.mikalaid.wenflon.core.PivotProvider;
-import io.github.mikalaid.wenflon.test._common.ServiceE;
-import io.github.mikalaid.wenflon.test._common.ServiceF;
-import io.github.mikalaid.wenflon.test._common.ServiceG;
-import io.github.mikalaid.wenflon.test._common.ServiceH;
-import io.github.mikalaid.wenflon.test._common.TestableWithProviderX;
-import io.github.mikalaid.wenflon.test._common.TestableWithProviderY;
-import io.github.mikalaid.wenflon.test.conditions.multiple_pivot_providers.TestConfig;
 import java.util.stream.Stream;
+
+import io.github.mikalaid.wenflon.core.PivotProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,5 +25,38 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestPropertySource("classpath:conditions/application-test_complex_conditions.properties")
 class ConditionsTest {
 
+  @Autowired
+  Testable underTest;
 
+  @SpyBean
+  @Qualifier("providerBeta")
+  PivotProvider<Integer> pivotProviderBeta;
+
+  @SpyBean
+  @Qualifier("providerAlpha")
+  PivotProvider<String> pivotProviderAlpha;
+
+  @ParameterizedTest
+  @MethodSource("getTestConfigurations") //todo write documentation for this happy path
+  void conditions_work_with_multiple_providers(String pivotAlpha, Integer pivotBeta, Class<?> implementation){
+    //given
+    when(pivotProviderAlpha.getPivot()).thenReturn(pivotAlpha);
+    when(pivotProviderBeta.getPivot()).thenReturn(pivotBeta);
+
+    //when
+    var output = underTest.test();
+
+    //then
+    assertThat(output).isEqualTo(implementation.getCanonicalName());
+  }
+
+  public static Stream<Arguments> getTestConfigurations() {
+    return Stream.of(
+            Arguments.of("panda", 1, ServiceA.class),
+            Arguments.of("duck", 404, ServiceB.class));
+  }
+
+  //todo think of the following thing: if user chooses complex conditions - shouldn't we enforce declaration of the default
+  // implementation? With complexity of conditions increase probability that condition will not match
+  // throwing exception in this case seems not a good idea.
 }

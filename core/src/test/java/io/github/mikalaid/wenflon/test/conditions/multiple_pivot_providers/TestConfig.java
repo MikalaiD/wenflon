@@ -5,7 +5,7 @@ import io.github.mikalaid.wenflon.test._common.ServiceE;
 import io.github.mikalaid.wenflon.test._common.ServiceF;
 import io.github.mikalaid.wenflon.test._common.ServiceG;
 import io.github.mikalaid.wenflon.test._common.ServiceH;
-import io.github.mikalaid.wenflon.test._common.StubPivotProvider;
+import io.github.mikalaid.wenflon.test._common.StubStringPivotProvider;
 import io.github.mikalaid.wenflon.test._common.TestableWithProviderX;
 import io.github.mikalaid.wenflon.test._common.TestableWithProviderY;
 import org.springframework.context.annotation.Bean;
@@ -37,12 +37,12 @@ public class TestConfig {
 
   @Bean
   PivotProvider<String> providerX() {
-    return new StubPivotProvider();
+    return new StubStringPivotProvider();
   }
 
   @Bean
   PivotProvider<String> providerY() {
-    return new StubPivotProvider();
+    return new StubStringPivotProvider();
   }
 
 }

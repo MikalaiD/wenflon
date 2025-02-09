@@ -8,11 +8,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import lombok.AccessLevel;
@@ -36,7 +34,7 @@ class DynamicProxyManager<T> {
 
   @Getter private final Set<Implementation> defaultImplementations;
   @Getter private final Class<T> representedInterface;
-  private final Set<PivotProvider<?>> pivotProviders = new HashSet<>();
+  private final Map<String, PivotProvider<?>> pivotProviders;
 
   @Getter private final T dynamicProxy;
   private final boolean soleConditionalImplAsImplicitDefault;
@@ -46,6 +44,7 @@ class DynamicProxyManager<T> {
     this.representedInterface = representedInterface;
     this.declaredImplementations = new HashSet<>();
     this.conditionalImplementations = new HashMap<>();
+    this.pivotProviders = new HashMap<>();
     this.defaultImplementations = new HashSet<>();
     this.dynamicProxy = createProxy();
     this.soleConditionalImplAsImplicitDefault =
@@ -70,7 +69,7 @@ class DynamicProxyManager<T> {
 
   private Object defineImplementation() {
     return conditionalImplementations.entrySet().stream()
-        .filter(implCase->implCase.getValue().isMatch())
+        .filter(implCase->implCase.getValue().getAsBoolean())
         .map(Map.Entry::getKey)
         .map(Implementation::getBean)
         .findFirst()//todo move 2 levels up?
@@ -125,7 +124,7 @@ class DynamicProxyManager<T> {
 
   private boolean addSimpleCondition(final WenflonProperties properties, final Implementation impl) {
     final var listOfSimpleConditionValues = properties.getConditions().get(impl.getBeanName());
-    if(listOfSimpleConditionValues.isEmpty()){
+    if(Objects.isNull(listOfSimpleConditionValues) || listOfSimpleConditionValues.isEmpty()){
       return false;
     }
     final var isDefaultImpl =
@@ -137,7 +136,7 @@ class DynamicProxyManager<T> {
       if (pivotProviders.size()>1) {
         throw new WenflonException("Only single pivot provider is allowed when simple condition is used. Please verify if you do not have complex condition declared for the same implementation. Only one type of condition should be used per implementation"); //todo test & doc what is written here :D also move the string to some utils class
       }
-      final var pivotProvider = pivotProviders.stream().findFirst().orElseThrow();
+      final var pivotProvider = pivotProviders.values().stream().findFirst().orElseThrow();
       final var implCondition = new WenflonCondition(() -> listOfSimpleConditionValues.contains(pivotProvider.getPivot().toString()));
       conditionalImplementations.put(impl, implCondition); //FINISHED HERE - to write tests
     }
@@ -147,7 +146,7 @@ class DynamicProxyManager<T> {
   //todo move this to documentation
   private void addComplexCondition(final WenflonProperties properties, final Implementation impl){
     final var complexCondition = properties.getComplexConditions().get(impl.getBeanName());
-    if(complexCondition.isEmpty()){
+    if(Objects.isNull(complexCondition) || complexCondition.isEmpty()){
       return;
     }
     if(complexCondition.size()>1){
@@ -166,7 +165,10 @@ class DynamicProxyManager<T> {
 
     final var implCondition = conditionPerProviderName.entrySet().stream()
             .map(entry -> {
-              final var pivotProvider = this.pivotProviders.stream().filter(provider -> provider.getClass().getSimpleName().equals(entry.getKey())).findFirst().orElseThrow(); //todo check this line if it works as intended, I think bean name would be better here, so will have to switch from set of providers to map
+              final var pivotProvider = this.pivotProviders.entrySet().stream()
+                      .filter(providerEntry -> providerEntry.getKey().equals(entry.getKey()))
+                      .map(Map.Entry::getValue)
+                      .findFirst().orElseThrow(); //todo check this line if it works as intended, I think bean name would be better here, so will have to switch from set of providers to map
               final var conditionValues = entry.getValue().values(); //todo replace with set?
               return (BooleanSupplier) () -> conditionValues.contains(pivotProvider.getPivot());
             })
@@ -196,16 +198,15 @@ class DynamicProxyManager<T> {
 
   void addPivotProvider(final List<PivotProviderWrapper<?>> pivotProviders) {
     if (pivotProviders.size() == 1 && pivotProviderBeanNames.length==0) {
-      this.pivotProviders.add(pivotProviders.get(0));
+      this.pivotProviders.put(pivotProviders.get(0).getBeanName(), pivotProviders.get(0));
       return;
     }
-    final var pivotProvidersToAdd = pivotProviders.stream()
+    pivotProviders.stream()
             .filter(provider -> Arrays.stream(pivotProviderBeanNames).anyMatch(name -> name.equals(provider.getBeanName())))
-            .toList();
-    if(pivotProvidersToAdd.isEmpty()){
+            .forEach(provider->this.pivotProviders.put(provider.getBeanName(), provider));
+    if(this.pivotProviders.isEmpty()){
       throw new BeanCreationException(MISSING_PIVOT_PROVIDER);
     }
-    this.pivotProviders.addAll(pivotProvidersToAdd);
   }
 
   @AllArgsConstructor
