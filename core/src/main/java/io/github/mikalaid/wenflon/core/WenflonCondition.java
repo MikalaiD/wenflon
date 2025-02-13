@@ -7,16 +7,16 @@ import java.util.function.BooleanSupplier;
 class WenflonCondition implements BooleanSupplier {
     private final List<BooleanSupplier> suppliers = new ArrayList<>();
 
-    public WenflonCondition(final BooleanSupplier initial) {
+    WenflonCondition(final BooleanSupplier initial) {
         suppliers.add(initial);
     }
 
-    public WenflonCondition addAnd(final BooleanSupplier andCondition) {
+    WenflonCondition addAnd(final BooleanSupplier andCondition) {
         suppliers.add(andCondition);
         return this;
     }
 
-    public WenflonCondition addOr(final BooleanSupplier orCondition){
+    WenflonCondition addOr(final BooleanSupplier orCondition){
         final BooleanSupplier current = ()->suppliers.stream()
                 .allMatch(BooleanSupplier::getAsBoolean);
         suppliers.clear();
