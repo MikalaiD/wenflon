@@ -20,9 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ComponentScan("io.github.mikalaid.wenflon.core")
+@TestPropertySource("classpath:conditions/complex/allOf/application-test.properties")
 @ContextConfiguration(classes = {TestConfig.class})
-@TestPropertySource("classpath:conditions/application-test_complex_conditions.properties")
 class ConditionsTest {
 
     @Autowired
