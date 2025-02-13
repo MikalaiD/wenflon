@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.multiple_pivot_providers;
+package io.github.mikalaid.wenflon.test.conditions.simple.multiple_pivot_providers;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

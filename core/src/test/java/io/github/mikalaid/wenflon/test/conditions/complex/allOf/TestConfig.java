@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.complex_allOf;
+package io.github.mikalaid.wenflon.test.conditions.complex.allOf;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.StubIntPivotProvider;
@@ -6,7 +6,6 @@ import io.github.mikalaid.wenflon.test._common.StubStringPivotProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.TestPropertySource;
 
 @Configuration
 @ComponentScan("io.github.mikalaid.wenflon.core")

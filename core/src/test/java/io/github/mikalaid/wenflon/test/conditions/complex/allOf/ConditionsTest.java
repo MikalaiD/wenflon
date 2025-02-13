@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.complex_allOf;
+package io.github.mikalaid.wenflon.test.conditions.complex.allOf;
 
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;

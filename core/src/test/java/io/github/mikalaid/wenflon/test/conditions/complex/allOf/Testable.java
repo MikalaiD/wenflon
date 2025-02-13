@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.complex_allOf;
+package io.github.mikalaid.wenflon.test.conditions.complex.allOf;
 
 import io.github.mikalaid.wenflon.core.Wenflon;
 

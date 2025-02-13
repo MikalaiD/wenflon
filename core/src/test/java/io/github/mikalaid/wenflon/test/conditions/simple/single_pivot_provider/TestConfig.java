@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.single_pivot_provider;
+package io.github.mikalaid.wenflon.test.conditions.simple.single_pivot_provider;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.ServiceA;
