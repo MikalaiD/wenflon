@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.complex_conditions;
+package io.github.mikalaid.wenflon.test.conditions.complex_allOf;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.StubIntPivotProvider;

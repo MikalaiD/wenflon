@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.function.BooleanSupplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import lombok.AccessLevel;
@@ -155,14 +157,13 @@ class DynamicProxyManager<T> {
     }
     final var matchType = complexCondition.keySet().stream().findFirst().orElseThrow();
     final var providers = complexCondition.get(matchType);
-    switch (matchType){
-      case ALL_OF -> addAllOfProvidersCondition(providers, impl);
-      case ANY_OF -> {}//todo
-    }
+    addAllOfProvidersCondition(providers, impl, matchType);
   }
 
-  private void addAllOfProvidersCondition(final Map<String, WenflonProperties.Condition> conditionPerProviderName, final Implementation impl) {
-
+  private void addAllOfProvidersCondition(final Map<String, WenflonProperties.Condition> conditionPerProviderName,
+                                          final Implementation impl,
+                                          final WenflonProperties.MatchType matchType) {
+    final var reduceFunction = getWenflonConditionBinaryOperator(matchType);
     final var implCondition = conditionPerProviderName.entrySet().stream()
             .map(entry -> {
               final var pivotProvider = this.pivotProviders.entrySet().stream()
@@ -173,10 +174,21 @@ class DynamicProxyManager<T> {
               return (BooleanSupplier) () -> conditionValues.contains(pivotProvider.getPivot());
             })
             .map(WenflonCondition::new)
-            .reduce(WenflonCondition::addAnd);
+            .reduce(reduceFunction);
 
     conditionalImplementations.put(impl, implCondition.get()); //todo temp - wait till merge with simple condition
   }
+
+  private static BinaryOperator<WenflonCondition> getWenflonConditionBinaryOperator(final WenflonProperties.MatchType matchType) {
+    if(matchType == WenflonProperties.MatchType.ALL_OF){
+      return WenflonCondition::addAnd;
+    } else if (matchType == WenflonProperties.MatchType.ANY_OF) {
+      return WenflonCondition::addOr;
+    } else {
+      throw new WenflonException(String.format("Match type not supported %s",matchType.name()));
+    }
+  }
+
 
   private void validateNumberOfDefaultImpls(final Implementation impl) {
     if (this.defaultImplementations.size() >= MAX_DEFAULT_IMPL_ALLOWED) {
