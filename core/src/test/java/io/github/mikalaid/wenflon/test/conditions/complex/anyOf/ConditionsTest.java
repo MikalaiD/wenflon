@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.conditions.complex.allOf;
+package io.github.mikalaid.wenflon.test.conditions.complex.anyOf;
 
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@TestPropertySource("classpath:conditions/complex/allOf/application-test.properties")
+@TestPropertySource("classpath:conditions/complex/anyOf/application-test.properties")
 @ContextConfiguration(classes = {TestConfig.class})
 class ConditionsTest {
 
@@ -52,10 +52,17 @@ class ConditionsTest {
     public static Stream<Arguments> getTestConfigurations() {
         return Stream.of(
                 Arguments.of("panda", 1, ServiceA.class),
-                Arguments.of("panda", 42, ServiceA.class),
-                Arguments.of("ruanda", 1, ServiceA.class),
+                Arguments.of("panda", 0, ServiceA.class),
+                Arguments.of("", 1, ServiceA.class),
+                Arguments.of("duck", 0, ServiceB.class),
+                Arguments.of("", 404, ServiceB.class),
                 Arguments.of("duck", 404, ServiceB.class),
-                Arguments.of("mammal", 404, ServiceB.class)
+                //todo currently the first is returned if both implementations match
+                // describe the case in documentation
+                // think of introducing property to stir this behaviour - throw exception if ambiguious or take first match
+                Arguments.of("mammal",0, ServiceA.class)
+
+
         );
     }
 
