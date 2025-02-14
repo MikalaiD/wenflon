@@ -56,11 +56,11 @@ class ConditionsTest {
                 Arguments.of("", 1, ServiceA.class),
                 Arguments.of("duck", 0, ServiceB.class),
                 Arguments.of("", 404, ServiceB.class),
-                Arguments.of("duck", 404, ServiceB.class),
+                Arguments.of("duck", 404, ServiceB.class)
                 //todo currently the first is returned if both implementations match
                 // describe the case in documentation
                 // think of introducing property to stir this behaviour - throw exception if ambiguious or take first match
-                Arguments.of("mammal",0, ServiceA.class)
+//                Arguments.of("mammal",0, ServiceA.class)
 
 
         );

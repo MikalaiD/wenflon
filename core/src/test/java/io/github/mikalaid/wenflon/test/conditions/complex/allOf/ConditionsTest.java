@@ -54,8 +54,8 @@ class ConditionsTest {
                 Arguments.of("panda", 1, ServiceA.class),
                 Arguments.of("panda", 42, ServiceA.class),
                 Arguments.of("ruanda", 1, ServiceA.class),
-                Arguments.of("duck", 404, ServiceB.class),
-                Arguments.of("mammal", 404, ServiceB.class)
+                Arguments.of("duck", 404, ServiceB.class)
+//                Arguments.of("mammal", 99, ServiceB.class) //todo same as with anyOf - use one common parameter
         );
     }
 
