@@ -1,11 +1,6 @@
 package io.github.mikalaid.wenflon.test.bean_creation.one_implementation;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import io.github.mikalaid.wenflon.exceptions.WenflonException;
-import io.github.mikalaid.wenflon.test._common.ServiceA;
-import io.github.mikalaid.wenflon.test._common.Testable;
-import io.github.mikalaid.wenflon.test._common.TestableStrict;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,17 +12,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@ComponentScan("io.github.mikalaid.wenflon.core")
-class SingleBeanCreationTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(SpringExtension.class)
+class BeanCreationTest {
 
   @Nested
   @TestPropertySource(
       "classpath:bean_creation_one_implementation/application-test-empty.properties")
   @ContextConfiguration(classes = {StdConfig.class})
   class TestWithNoPropertiesAtAll {
-    @Autowired Testable primaryTestable;
+    @Autowired
+    Testable primaryTestable;
 
     @Autowired
     @Qualifier("testableA")
@@ -53,7 +49,8 @@ class SingleBeanCreationTest {
       "classpath:bean_creation_one_implementation/application-test-always-false.properties")
   @ContextConfiguration(classes = {StdConfig.class})
   class TestWithConditionToFalse_DefaultBehaviour_TheBeanStillReturned {
-    @Autowired Testable primaryTestable;
+    @Autowired
+    Testable primaryTestable;
 
     @Autowired
     @Qualifier("testableA")
@@ -77,7 +74,8 @@ class SingleBeanCreationTest {
   @ContextConfiguration(classes = {StrictSoleImplConfig.class})
   @ComponentScan("io.github.mikalaid.wenflon.core")
   class TestWithConditionToFalse_SoleBeanAsDefaultIsFalse_exception_is_thrown {
-    @Autowired TestableStrict primaryTestable;
+    @Autowired
+    TestableStrict primaryTestable;
 
     @Autowired
     @Qualifier("testableD")

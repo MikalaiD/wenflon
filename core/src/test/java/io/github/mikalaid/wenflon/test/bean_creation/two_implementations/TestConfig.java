@@ -1,10 +1,6 @@
 package io.github.mikalaid.wenflon.test.bean_creation.two_implementations;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
-import io.github.mikalaid.wenflon.test._common.ClassAsWenflon;
-import io.github.mikalaid.wenflon.test._common.ServiceA;
-import io.github.mikalaid.wenflon.test._common.ServiceB;
-import io.github.mikalaid.wenflon.test._common.Testable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

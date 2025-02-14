@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("io.github.mikalaid.wenflon.core")
-public class TestConfig {
+class TestConfig {
 
   @Bean
   Testable testableA() {

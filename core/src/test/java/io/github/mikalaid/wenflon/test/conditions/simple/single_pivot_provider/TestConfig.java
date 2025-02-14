@@ -1,11 +1,7 @@
 package io.github.mikalaid.wenflon.test.conditions.simple.single_pivot_provider;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
-import io.github.mikalaid.wenflon.test._common.ServiceA;
-import io.github.mikalaid.wenflon.test._common.ServiceB;
-import io.github.mikalaid.wenflon.test._common.ServiceC;
 import io.github.mikalaid.wenflon.test._common.StubStringPivotProvider;
-import io.github.mikalaid.wenflon.test._common.Testable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

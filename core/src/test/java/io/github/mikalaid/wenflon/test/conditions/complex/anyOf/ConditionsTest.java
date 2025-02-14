@@ -49,7 +49,7 @@ class ConditionsTest {
         assertThat(output).isEqualTo(implementation.getCanonicalName());
     }
 
-    public static Stream<Arguments> getTestConfigurations() {
+    static Stream<Arguments> getTestConfigurations() {
         return Stream.of(
                 Arguments.of("panda", 1, ServiceA.class),
                 Arguments.of("panda", 0, ServiceA.class),

@@ -1,4 +1,3 @@
 package io.github.mikalaid.wenflon.test.conditions.complex.anyOf;
-
-public class ServiceA implements Testable {
+class ServiceA implements Testable {
 }
