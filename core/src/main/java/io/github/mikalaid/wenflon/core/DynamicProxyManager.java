@@ -15,19 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
-
-import static io.github.mikalaid.wenflon.core.WenflonProperties.MatchType.ALL_OF;
 
 class DynamicProxyManager<T> {
 
     static final String DEFAULT_KEYWORD = "default";
     private static final int MAX_DEFAULT_IMPL_ALLOWED = 1;
-    public static final String CANNOT_DEFINE_IMPL = // todo move to a separate util class
-            "Neither can find conditional implementation, nor can find the default one. Please check wenflon.conditions.* properties, or beans declarations, or 'soleConditionalImplAsImplicitDefault' property on @Wenflon";
-    public static final String MISSING_PIVOT_PROVIDER = "Cannot find pivot provider. Either none was declared. Or pivot provider name used in @Wenflon cannot be match with any bean.";
 
     private final Set<Implementation> declaredImplementations;
 
@@ -83,7 +77,7 @@ class DynamicProxyManager<T> {
                                 this.getDefaultImplementations().stream()
                                         .findAny()
                                         .map(Implementation::getBean)
-                                        .orElseThrow(() -> new WenflonException(CANNOT_DEFINE_IMPL)));
+                                        .orElseThrow(() -> new WenflonException(Messages.CANNOT_DEFINE_IMPL)));
     }
 
     String getName() {
@@ -139,7 +133,7 @@ class DynamicProxyManager<T> {
             this.defaultImplementations.add(impl);
         } else {
             if (pivotProviders.size() > 1) {
-                throw new WenflonException("Only single pivot provider is allowed when simple condition is used. Please verify if you do not have complex condition declared for the same implementation. Only one type of condition should be used per implementation"); //todo test & doc what is written here :D also move the string to some utils class
+                throw new WenflonException(Messages.ONLY_SINGLE_PROVIDER_FOR_SIMPLE); //todo test & doc what is written here :D
             }
             final var pivotProvider = pivotProviders.values().stream().findFirst().orElseThrow();
             final var implCondition = LazySuppliersBucket.createAndBucket(List.of(() -> listOfSimpleConditionValues.contains(pivotProvider.getPivot().toString())));
@@ -189,12 +183,7 @@ class DynamicProxyManager<T> {
     private void validateNumberOfDefaultImpls(final Implementation impl) {
         if (this.defaultImplementations.size() >= MAX_DEFAULT_IMPL_ALLOWED) {
             throw new BeanCreationException(
-                    "Too many default default implementations declared. Current maximum per wenflon is %s. %s is declared as %s default implementation for %s" // todo move to separate util class
-                            .formatted(
-                                    MAX_DEFAULT_IMPL_ALLOWED,
-                                    impl.getBeanName(),
-                                    MAX_DEFAULT_IMPL_ALLOWED + 1,
-                                    this.getRepresentedInterfaceName()));
+                    Messages.getTooManyDefaultImplsMessage(MAX_DEFAULT_IMPL_ALLOWED, impl.getBeanName(), this.getRepresentedInterfaceName()));
         }
     }
 
@@ -213,7 +202,7 @@ class DynamicProxyManager<T> {
                 .filter(provider -> Arrays.stream(pivotProviderBeanNames).anyMatch(name -> name.equals(provider.getBeanName())))
                 .forEach(provider -> this.pivotProviders.put(provider.getBeanName(), provider));
         if (this.pivotProviders.isEmpty()) {
-            throw new BeanCreationException(MISSING_PIVOT_PROVIDER);
+            throw new BeanCreationException(Messages.MISSING_PIVOT_PROVIDER);
         }
     }
 

@@ -1,0 +1,32 @@
+package io.github.mikalaid.wenflon.core;
+
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+class Messages {
+    String CANNOT_DEFINE_IMPL = """
+    Neither can find conditional implementation, nor can find the default one. Please check wenflon.conditions.* \
+    properties, or beans declarations, or 'soleConditionalImplAsImplicitDefault' property on @Wenflon
+    """;
+    String MISSING_PIVOT_PROVIDER = """
+    Cannot find pivot provider. Either none was declared. \
+    Or pivot provider name used in @Wenflon cannot be match with any bean.
+    """;
+
+    String ONLY_SINGLE_PROVIDER_FOR_SIMPLE = """
+            Only single pivot provider is allowed when simple condition is used. \
+            Please verify if you do not have complex condition declared for the same implementation. \
+            Only one type of condition should be used per implementation
+            """;
+    private final String TOO_MANY_DEFAULT_IMPLEMENTATIONS = """
+            Too many default implementations declared. Current maximum per wenflon is %s. \
+            %s is declared as %s default implementation for %s
+            """;
+    static String getTooManyDefaultImplsMessage(final int maxDefaultImplAllowed, final String beanName, final String representedInterfaceName) {
+        return TOO_MANY_DEFAULT_IMPLEMENTATIONS.formatted(
+                        maxDefaultImplAllowed,
+                        beanName,
+                        maxDefaultImplAllowed + 1,
+                        representedInterfaceName);
+    }
+}
