@@ -115,7 +115,7 @@ class DynamicProxyManager<T> {
     }
 
     private void addConditions(final WenflonProperties properties, final Implementation impl) {
-        final var simpleConditionAdded = addSimpleCondition(properties, impl);//todo convert it eplicitely to any of
+        final var simpleConditionAdded = addSimpleCondition(properties, impl);
         if (!simpleConditionAdded) {
             addComplexCondition(properties, impl); //todo add tests and doc - simple condition trumps complex condition.
         }

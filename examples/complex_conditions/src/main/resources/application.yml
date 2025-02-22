@@ -1,0 +1,26 @@
+logging:
+  level:
+   org:
+    springframework:
+     security: DEBUG
+
+wenflon:
+  conditions:
+    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
+    newInsuranceRiskEngine: US, default
+    shallowKYCScanner: VIP
+    thoroughKYCScanner: default
+    complex-conditions:
+      testableA:
+        allOf:
+          providerAlpha:
+            values: panda, ruanda, mammal
+          providerBeta:
+            values: 1, 42, 99
+      testableB:
+        anyOf:
+          providerAlpha:
+            values: duck, mammal
+          providerBeta:
+            values: 404, 99
+#            todo add more less and inbetween type

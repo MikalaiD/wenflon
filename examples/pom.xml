@@ -17,6 +17,7 @@
     <modules>
         <module>basic</module>
         <module>multiple_providers</module>
+        <module>complex_conditions</module>
     </modules>
 
     <properties>

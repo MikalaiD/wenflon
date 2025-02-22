@@ -211,6 +211,26 @@ curl -u usUser:password2 http://localhost:8080/scan
 curl -u usUserVIP:password3 http://localhost:8080/scan
 ```
 
+## COMPLEX CONDITIONS EXAMPLE
+For more explicit condition description in properties one can use ```anyOf``` or ```allOf``` keywords. 
+
+```yaml
+wenflon:
+    complex-conditions:
+      shallowKYCScanner:
+        allOf:
+          providerAlpha:
+            values: panda, ruanda, mammal
+          providerBeta: 
+            values: 1, 42, 99
+      thoroughKYCScanner:
+        anyOf: 
+          providerAlpha: 
+            values: duck, mammal      
+          providerBeta:
+            values: 1, 99
+```
+
 ## DETAILS
 ### Supported bean scopes
 Singleton, Prototype
