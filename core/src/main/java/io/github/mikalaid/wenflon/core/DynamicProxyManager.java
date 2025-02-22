@@ -69,9 +69,9 @@ class DynamicProxyManager<T> {
     private Object defineImplementation() {
         return conditionalImplementations.entrySet().stream()
                 .filter(implCase -> implCase.getValue().getAsBoolean())
+                .findFirst()
                 .map(Map.Entry::getKey)
                 .map(Implementation::getBean)
-                .findFirst()//todo move 2 levels up?
                 .orElseGet(
                         () ->
                                 this.getDefaultImplementations().stream()
