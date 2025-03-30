@@ -21,6 +21,9 @@ class TestConfig {
   }
 
   @Bean
+  Testable testableC() {return new ServiceC();}
+
+  @Bean
   PivotProvider<String> providerAlpha() {
     return new StubStringPivotProvider();
   }

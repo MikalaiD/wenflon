@@ -68,7 +68,8 @@ class WenflonProperties {
                     throw new WenflonException(Messages.wrongClass(BigDecimal.class.getSimpleName(), target.getClass().getSimpleName())); //Finished here conditions test failing
                 };
                 case RANGE, RANGE_CLOSED -> target -> {
-                    if(target instanceof BigDecimal bigDecimalTarget){
+                    if(target instanceof Number number){
+                        final var bigDecimalTarget = new BigDecimal(String.valueOf(number));
                         final var limitDown = new BigDecimal(args.get(0));
                         final var limitUp = new BigDecimal(args.get(1));
                         return switch (this.type){
