@@ -228,7 +228,7 @@ wenflon:
           providerAlpha: 
             values: duck, mammal      
           providerBeta:
-            values: 1, 99
+            moreThan: 1
 ```
 
 ## DETAILS

@@ -26,7 +26,7 @@ class DynamicProxyManager<T> {
     private final Set<Implementation> declaredImplementations;
 
     @Getter(AccessLevel.PACKAGE)
-    private final Map<Implementation, LazySuppliersBucket> conditionalImplementations;
+    private final Map<Implementation, LazyConditionsBucket> conditionalImplementations;
 
     @Getter
     private final Set<Implementation> defaultImplementations;
@@ -136,7 +136,7 @@ class DynamicProxyManager<T> {
                 throw new WenflonException(Messages.ONLY_SINGLE_PROVIDER_FOR_SIMPLE); //todo test & doc what is written here :D
             }
             final var pivotProvider = pivotProviders.values().stream().findFirst().orElseThrow();
-            final var implCondition = LazySuppliersBucket.createAndBucket(List.of(() -> listOfSimpleConditionValues.contains(pivotProvider.getPivot().toString())));
+            final var implCondition = LazyConditionsBucket.createAndBucket(List.of(() -> listOfSimpleConditionValues.contains(pivotProvider.getPivot().toString())));
             conditionalImplementations.put(impl, implCondition);
         }
         return true;
@@ -153,31 +153,31 @@ class DynamicProxyManager<T> {
             //todo add test
             throw new WenflonException("Only one complex condition type is allowed per implementation");
         }
-        final var matchType = complexCondition.keySet().stream().findFirst().orElseThrow();
-        final var providers = complexCondition.get(matchType);
-        addCondition(providers, impl, matchType);
+
+        final var conditionCase = complexCondition.entrySet().stream().findAny().orElseThrow();
+        addCondition(conditionCase, impl);
     }
 
-    private void addCondition(final Map<String, WenflonProperties.Condition> conditionPerProviderName,
-                              final Implementation impl,
-                              final WenflonProperties.MatchType matchType) {
+    private void addCondition(final Map.Entry<WenflonProperties.MatchType, Map<String, WenflonProperties.Condition>> conditionCase,
+                              final Implementation impl) {
+        final var matchType = conditionCase.getKey();
+        final var conditionPerProviderName = conditionCase.getValue();
         final var conditionsAsBooleanSupplierList = conditionPerProviderName.entrySet().stream()
-                .map(entry -> {
-                    final var pivotProvider = this.pivotProviders.entrySet().stream()
-                            .filter(providerEntry -> providerEntry.getKey().equals(entry.getKey()))
-                            .map(Map.Entry::getValue)
-                            .findFirst().orElseThrow(); //todo check this line if it works as intended, I think bean name would be better here, so will have to switch from set of providers to map
-                    final var conditionValues = entry.getValue().values(); //todo replace with set?
-                    return (BooleanSupplier) () -> conditionValues.contains(pivotProvider.getPivot());
+                .map(conditionPerProvider -> {
+                    final PivotProvider<?> pivotProvider = this.pivotProviders.get(conditionPerProvider.getKey());
+                    if(pivotProvider==null){
+                        throw new WenflonException("Provider specified in conditions cannot be found among registered providers");
+                    }
+                    final var condition = conditionPerProvider.getValue();
+                    return (BooleanSupplier) () -> condition.test(pivotProvider.getPivot());
                 })
                 .toList();
-        final var suppliersBucket =
+        final var lazyConditionsBucket =
                 switch (matchType) {
-                    case ALL_OF -> LazySuppliersBucket.createAndBucket(conditionsAsBooleanSupplierList);
-                    case ANY_OF -> LazySuppliersBucket.createOrBucket(conditionsAsBooleanSupplierList);
+                    case ALL_OF -> LazyConditionsBucket.createAndBucket(conditionsAsBooleanSupplierList);
+                    case ANY_OF -> LazyConditionsBucket.createOrBucket(conditionsAsBooleanSupplierList);
                 };
-
-        conditionalImplementations.put(impl, suppliersBucket); //todo temp - wait till merge with simple condition
+        conditionalImplementations.put(impl, lazyConditionsBucket); //todo temp - wait till merge with simple condition
     }
 
     private void validateNumberOfDefaultImpls(final Implementation impl) {

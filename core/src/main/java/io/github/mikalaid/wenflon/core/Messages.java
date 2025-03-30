@@ -29,4 +29,15 @@ class Messages {
                         maxDefaultImplAllowed + 1,
                         representedInterfaceName);
     }
+
+    private static String CONDITION_UNEXPECTED_CLASS = "Unexpected class in condition, expected %s, but got %s";
+
+    static String wrongClass(final String expectedClassName, final String actualClassName ){
+        return CONDITION_UNEXPECTED_CLASS.formatted(expectedClassName, actualClassName);
+    }
+
+    private static String CONDITION_TYPE_NOT_RECOGNIZED = "Condition type not recognised: %s";
+    public static String getConditionTypeNotRecognized(final String type) {
+        return CONDITION_TYPE_NOT_RECOGNIZED.formatted(type);
+    }
 }
