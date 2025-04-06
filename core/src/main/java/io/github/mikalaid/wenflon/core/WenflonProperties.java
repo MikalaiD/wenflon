@@ -96,7 +96,7 @@ class WenflonProperties {
             RANGE("range"),
             RANGE_CLOSED("rangeClosed");
 
-            private String label;
+            private final String label;
             private static final Map<String, Type> BY_LABEL = new HashMap<>();
 
             static {
