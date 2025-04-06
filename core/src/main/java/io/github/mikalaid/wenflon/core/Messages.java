@@ -2,6 +2,8 @@ package io.github.mikalaid.wenflon.core;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.Arrays;
+
 @UtilityClass
 class Messages {
     String CANNOT_DEFINE_IMPL = """
@@ -40,4 +42,11 @@ class Messages {
     public static String getConditionTypeNotRecognized(final String type) {
         return CONDITION_TYPE_NOT_RECOGNIZED.formatted(type);
     }
+
+    private static String OLNY_ONE_COMPLEX_CONDITION_TYPE_ALLOWED = "Only one complex condition type of %s is allowed per implementation";
+
+    public static String getOnlyOneComplexConditionTypeAllowed(){
+        return OLNY_ONE_COMPLEX_CONDITION_TYPE_ALLOWED.formatted(Arrays.stream(WenflonProperties.MatchType.values()).toList());
+    }
+
 }

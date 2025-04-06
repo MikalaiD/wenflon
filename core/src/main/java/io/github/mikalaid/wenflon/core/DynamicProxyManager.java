@@ -150,8 +150,7 @@ class DynamicProxyManager<T> {
             return; //todo shouldn't exception be thrown here since it seems that at this point no condition is provided
         }
         if (complexCondition.size() > 1) {
-            //todo add test
-            throw new WenflonException("Only one complex condition type is allowed per implementation");
+            throw new WenflonException(Messages.getOnlyOneComplexConditionTypeAllowed());
         }
 
         final var conditionCase = complexCondition.entrySet().stream().findAny().orElseThrow();

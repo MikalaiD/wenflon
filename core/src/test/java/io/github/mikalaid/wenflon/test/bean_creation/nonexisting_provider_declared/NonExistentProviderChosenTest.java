@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class NonExistentProviderChosenTest {
 
-
   @Test
   void testBeanCreationException_ifWenflonSpecifiesNonExistentPivotProvider() {
     assertThatThrownBy(() -> {
