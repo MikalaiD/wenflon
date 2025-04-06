@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.bean_creation.multiple_complex_for_same_wenflon;
+package io.github.mikalaid.wenflon.test.bean_creation.multiple_complex_condition_type_for_same_wenflon;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.StubIntPivotProvider;
