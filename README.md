@@ -213,22 +213,34 @@ curl -u usUserVIP:password3 http://localhost:8080/scan
 
 ## COMPLEX CONDITIONS EXAMPLE
 For more explicit condition description in properties one can use ```anyOf``` or ```allOf``` keywords. 
+In case of the complex condition one needs to provide not only name of interface under wenflon but also pivot provider's 
+bean name.
+
+In the below example wenflon is added to the interface responsible for medicine orders placements for pets. There are also 2 
+pivotProviders - EuropeanPetClassificator and ChipInfoService - to get information about pet's kind and pet's age respectively.
+Depending on return values by these pivot providers this or that implementation under wenflon will be used.
 
 ```yaml
 wenflon:
-    complex-conditions:
-      shallowKYCScanner:
-        allOf:
-          providerAlpha:
-            values: panda, ruanda, mammal
-          providerBeta: 
-            values: 1, 42, 99
-      thoroughKYCScanner:
-        anyOf: 
-          providerAlpha: 
-            values: duck, mammal      
-          providerBeta:
-            moreThan: 1
+  complex-conditions:
+    allPetPharmacy:
+      allOf:
+        europeanPetClassificator:
+          values: panda, dog, guinea pig, chupakabra
+        chipInfoService:
+          lessThan: 7
+    healthyPets:
+      anyOf:
+        europeanPetClassificator:
+          values: duck, cat, dog
+        chipInfoService:
+          rangeClosed: 7, 20
+    oldDogDrugs:
+      allOf:
+        europeanPetClassificator:
+          values: dog
+        chipInfoService:
+          moreThan: 20
 ```
 
 ## DETAILS
