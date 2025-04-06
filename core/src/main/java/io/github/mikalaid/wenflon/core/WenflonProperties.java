@@ -31,7 +31,6 @@ class WenflonProperties {
 
     private static Condition getLimit(final  Map<String, List<String>> conditionMap) {
         final var condition = conditionMap.entrySet();
-        //todo write test for this condition
         if(condition.size()>1){
             throw new WenflonException(Messages.getOnlySingleConditionIsAllowed(conditionMap));
         }
@@ -89,7 +88,6 @@ class WenflonProperties {
 
         @AllArgsConstructor
         enum Type{
-            //todo write tests for each case
             VALUES("values"),
             MORE_THAN("moreThan"),
             MORE_THAN_CLOSED("moreThanClosed"),
@@ -114,16 +112,6 @@ class WenflonProperties {
                 return type;
             }
         }
-//        Condition normalised() {
-//            return new Condition(values().stream().map(Object::toString).map(value -> {
-//                //todo maybe to add decimal as well
-//                try {
-//                    return Integer.valueOf(value);
-//                } catch (NumberFormatException e) {
-//                    return value;
-//                }
-//            }).toList(), moreThan());//todo temp
-//        }
     }
 }
 
