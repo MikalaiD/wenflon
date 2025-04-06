@@ -33,7 +33,7 @@ class WenflonProperties {
         final var condition = conditionMap.entrySet();
         //todo write test for this condition
         if(condition.size()>1){
-            throw new WenflonException("Only single condition type is allowed! " + conditionMap);
+            throw new WenflonException(Messages.getOnlySingleConditionIsAllowed(conditionMap));
         }
         return condition.stream().map(c->new Condition(c.getKey(), c.getValue())).findFirst().orElseThrow(()-> new WenflonException("Condition is empty!"));
     }

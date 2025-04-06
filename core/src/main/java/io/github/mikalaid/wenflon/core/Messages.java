@@ -3,6 +3,7 @@ package io.github.mikalaid.wenflon.core;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
+import java.util.Map;
 
 @UtilityClass
 class Messages {
@@ -49,4 +50,9 @@ class Messages {
         return OLNY_ONE_COMPLEX_CONDITION_TYPE_ALLOWED.formatted(Arrays.stream(WenflonProperties.MatchType.values()).toList());
     }
 
+    private static String ONLY_SINGLE_CONDITION_IS_ALLOWED = "Only single condition is allowed! Got the following conditions map though: %s";
+
+    public static String getOnlySingleConditionIsAllowed(final Map<String, ?> map){
+        return ONLY_SINGLE_CONDITION_IS_ALLOWED.formatted(map);
+    }
 }

@@ -1,4 +1,4 @@
-package io.github.mikalaid.wenflon.test.bean_creation.multiple_complex_condition_type_for_same_wenflon;
+package io.github.mikalaid.wenflon.test.bean_creation.multiple_conditions_within_same_condition_type;
 
 import io.github.mikalaid.wenflon.core.PivotProvider;
 import io.github.mikalaid.wenflon.test._common.StubIntPivotProvider;
@@ -19,5 +19,10 @@ class TestConfig {
   @Bean
   PivotProvider<String> providerAlpha() {
     return new StubStringPivotProvider();
+  }
+
+  @Bean
+  PivotProvider<Integer> providerBeta() {
+    return new StubIntPivotProvider();
   }
 }
