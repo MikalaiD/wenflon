@@ -64,7 +64,7 @@ class WenflonProperties {
                             default -> throw new UnsupportedOperationException();
                         };
                     }
-                    throw new WenflonException(Messages.wrongClass(BigDecimal.class.getSimpleName(), target.getClass().getSimpleName())); //Finished here conditions test failing
+                    throw new WenflonException(Messages.wrongClass(BigDecimal.class.getSimpleName(), target.getClass().getSimpleName()));
                 };
                 case RANGE, RANGE_CLOSED -> target -> {
                     if(target instanceof Number number){
