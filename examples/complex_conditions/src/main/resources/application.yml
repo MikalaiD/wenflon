@@ -5,22 +5,22 @@ logging:
      security: DEBUG
 
 wenflon:
-  conditions:
-    stdInsuranceRiskEngine: EU, REPUBLIC_OF_KOREA
-    newInsuranceRiskEngine: US, default
-    shallowKYCScanner: VIP
-    thoroughKYCScanner: default
-    complex-conditions:
-      testableA:
-        allOf:
-          providerAlpha:
-            values: panda, ruanda, mammal
-          providerBeta:
-            values: 1, 42, 99
-      testableB:
-        anyOf:
-          providerAlpha:
-            values: duck, mammal
-          providerBeta:
-            values: 404, 99
-#            todo add more less and inbetween type
+  complex-conditions:
+    allPetPharmacy:
+      allOf:
+        europeanPetClassificator:
+          values: panda, dog, guinea pig, chupakabra
+        chipInfoService:
+          lessThan: 7
+    healthyPets:
+      anyOf:
+        europeanPetClassificator:
+          values: duck, cat, dog
+        chipInfoService:
+          rangeClosed: 7, 20
+#    oldDogDrugs: //todo temp, will make work on 2 and then "following the instruction" try to add the third one
+#      allOf:
+#        europeanPetClassificator:
+#          values: dog
+#        chipInfoService:
+#          moreThan: 20
