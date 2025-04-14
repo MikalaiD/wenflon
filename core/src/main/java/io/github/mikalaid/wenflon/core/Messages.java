@@ -12,8 +12,8 @@ class Messages {
     properties, or beans declarations, or 'soleConditionalImplAsImplicitDefault' property on @Wenflon
     """;
     String MISSING_PIVOT_PROVIDER = """
-    Cannot find pivot provider. Either none was declared. \
-    Or pivot provider name used in @Wenflon cannot be match with any bean.
+    Cannot find pivot provider. Either none was declared \
+    or pivot provider name used in @Wenflon cannot be match with any bean.
     """;
 
     String ONLY_SINGLE_PROVIDER_FOR_SIMPLE = """

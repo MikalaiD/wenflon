@@ -8,19 +8,19 @@ wenflon:
   complex-conditions:
     allPetPharmacy:
       allOf:
-        europeanPetClassificator:
-          values: panda, dog, guinea pig, chupakabra
-        chipInfoService:
+        petClassificatorProvider:
+          values: domestic_small
+        chipInfoProvider:
           lessThan: 7
     healthyPets:
       anyOf:
-        europeanPetClassificator:
-          values: duck, cat, dog
-        chipInfoService:
+        petClassificatorProvider:
+          values: domestic_small, domestic_large, wild
+        chipInfoProvider:
           rangeClosed: 7, 20
 #    oldDogDrugs: //todo temp, will make work on 2 and then "following the instruction" try to add the third one
 #      allOf:
-#        europeanPetClassificator:
+#        petClassificatorProvider:
 #          values: dog
-#        chipInfoService:
+#        chipInfoProvider:
 #          moreThan: 20

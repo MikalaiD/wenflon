@@ -217,7 +217,7 @@ In case of the complex condition one needs to provide not only name of interface
 bean name.
 
 In the below example wenflon is added to the interface responsible for medicine orders placements for pets. There are also 2 
-pivotProviders - EuropeanPetClassificator and ChipInfoService - to get information about pet's kind and pet's age respectively.
+pivotProviders - internalPetClassificator and ChipInfoService - to get information about pet's kind and pet's age respectively.
 Depending on return values by these pivot providers this or that implementation under wenflon will be used.
 
 ```yaml
@@ -225,19 +225,19 @@ wenflon:
   complex-conditions:
     allPetPharmacy:
       allOf:
-        europeanPetClassificator:
+        internalPetClassificator:
           values: panda, dog, guinea pig, chupakabra
         chipInfoService:
           lessThan: 7
     healthyPets:
       anyOf:
-        europeanPetClassificator:
+        internalPetClassificator:
           values: duck, cat, dog
         chipInfoService:
           rangeClosed: 7, 20
     oldDogDrugs:
       allOf:
-        europeanPetClassificator:
+        internalPetClassificator:
           values: dog
         chipInfoService:
           moreThan: 20

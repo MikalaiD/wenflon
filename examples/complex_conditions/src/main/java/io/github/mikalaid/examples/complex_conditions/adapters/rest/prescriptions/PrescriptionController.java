@@ -1,6 +1,6 @@
 package io.github.mikalaid.examples.complex_conditions.adapters.rest.prescriptions;
 
-import io.github.mikalaid.examples.complex_conditions.application.port.out.FillInPrescriptionUseCasePort;
+import io.github.mikalaid.examples.complex_conditions.application.port.in.FillInPrescriptionUseCasePort;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

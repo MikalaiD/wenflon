@@ -1,7 +1,7 @@
 package io.github.mikalaid.examples.complex_conditions.application.service.prescriptions;
 
-import io.github.mikalaid.examples.complex_conditions.application.port.out.FillInPrescriptionUseCasePort;
-import io.github.mikalaid.examples.complex_conditions.domain.service.VetMedicineProvider;
+import io.github.mikalaid.examples.complex_conditions.application.port.in.FillInPrescriptionUseCasePort;
+import io.github.mikalaid.examples.complex_conditions.application.port.out.order.VetMedicineOrderProviderPort;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FillInPrescriptionUseCaseHandler implements FillInPrescriptionUseCasePort {
 
-    private final VetMedicineProvider vetMedicineProvider;
+    private final VetMedicineOrderProviderPort vetMedicineOrderProvider;
 
     @Override
     public boolean fillIn(final Command command) {
-        return vetMedicineProvider.placeOrder(command.medicineId(), command.count());
+        return vetMedicineOrderProvider.placeOrder(command.medicineId(), command.count());
     }
 }

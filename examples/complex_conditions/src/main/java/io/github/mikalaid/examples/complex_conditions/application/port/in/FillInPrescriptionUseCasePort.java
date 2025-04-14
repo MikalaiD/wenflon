@@ -1,4 +1,4 @@
-package io.github.mikalaid.examples.complex_conditions.application.port.out;
+package io.github.mikalaid.examples.complex_conditions.application.port.in;
 
 import io.github.mikalaid.examples.complex_conditions.domain.PetType;
 
