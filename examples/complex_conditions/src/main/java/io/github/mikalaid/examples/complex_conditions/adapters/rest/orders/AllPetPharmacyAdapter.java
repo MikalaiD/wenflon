@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+@Service("allPetPharmacy")
 @Primary
 public class AllPetPharmacyAdapter implements VetMedicineOrderProviderPort {
     @Override

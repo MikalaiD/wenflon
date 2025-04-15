@@ -16,7 +16,8 @@ public class InternalPetClassificator implements PetClassificatorPort { //todo a
     }
 
     @Override
-    public String classify() { //todo refactor to enum
+    public String classify() { //todo refactor to enum FINISHED HERE - request falls in here, however, need to come up with visible output e.g. "PetPharmacy confirms order"
+        //todo check there are no multiple useless runs for conditions check
         return switch (animalType) {
             case "duck" -> "wild";
             case "doc", "cat" -> "domestic_small";

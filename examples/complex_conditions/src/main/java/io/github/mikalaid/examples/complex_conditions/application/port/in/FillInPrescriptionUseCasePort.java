@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface FillInPrescriptionUseCasePort {
     boolean fillIn(Command command);
 
-    record Command(PetType petType, int age, UUID medicineId, int count){}
+    record Command(UUID medicineId, int count){}
 }

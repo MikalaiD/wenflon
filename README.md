@@ -217,7 +217,7 @@ In case of the complex condition one needs to provide not only name of interface
 bean name.
 
 In the below example wenflon is added to the interface responsible for medicine orders placements for pets. There are also 2 
-pivotProviders - internalPetClassificator and ChipInfoService - to get information about pet's kind and pet's age respectively.
+pivotProviders - _internalPetClassificator_ and _chipInfoService_ - to get information about pet's kind and pet's age respectively.
 Depending on return values by these pivot providers this or that implementation under wenflon will be used.
 
 ```yaml
@@ -241,6 +241,13 @@ wenflon:
           values: dog
         chipInfoService:
           moreThan: 20
+```
+
+```shell
+curl -X POST http://localhost:8080/prescriptions/fill-in  \
+-H "Animal-Type: duck" http://localhost:8080/prescriptions/fill-in \
+-H "Content-Type: application/json" \
+-d '{"medicineId":"c820e747-5b53-4b30-b977-10c2cb7a2cb9", "count": 2}'
 ```
 
 ## DETAILS

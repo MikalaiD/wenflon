@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+@Service("healthyPets")
 public class HealthyPetsAdapter implements VetMedicineOrderProviderPort {
     @Override
     public boolean placeOrder(final UUID medicineId, final int count) {

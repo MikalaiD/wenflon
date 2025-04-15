@@ -1,14 +1,15 @@
 package io.github.mikalaid.examples.complex_conditions.adapters.rest.prescriptions;
 
-import io.github.mikalaid.examples.complex_conditions.domain.PetType;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Value
+@AllArgsConstructor
+@Getter
+@NoArgsConstructor
 public class PrescriptionDto {
-     PetType petType;
-     int age;
-     UUID medicineId;
-     int count;
+     private UUID medicineId;
+     private int count;
 }
